@@ -31,7 +31,7 @@ public class Fachada {
         this.relatorio = new Relatorio();
     }
 
-    // === Operações de Cliente ===
+    // Operações de Cliente
     public boolean cadastrarCliente(String nome, String telefone, String email) {
         Cliente novoCliente = new Cliente(nome, telefone, email);
         return clienteController.cadastrarCliente(novoCliente);
@@ -41,11 +41,19 @@ public class Fachada {
         return this.clienteController.buscarClientePorTelefone(telefone);
     }
 
+    public boolean atualizarCliente(Cliente cliente) {
+        return clienteController.atualizarCliente(cliente);
+    }
+
+    public boolean removerCliente(String telefone) {
+        return clienteController.removerCliente(telefone);
+    }
+
     public double consultarHistoricoCliente(Cliente cliente) {
         return cliente.consultarHistorico();
     }
 
-    // === Operações de Reserva ===
+    // Operações de Reserva
     public boolean fazerReserva(String telefoneCliente, Mesa mesa, LocalDateTime dataHora, int numeroPessoas) {
         Cliente cliente = clienteController.buscarClientePorTelefone(telefoneCliente);
         if (cliente == null) {
@@ -60,7 +68,7 @@ public class Fachada {
         return reservaController.cancelarReserva(reserva);
     }
 
-    // === Operações de Mesa ===
+    // Operações de Mesa
     public boolean cadastrarMesa(int numero, int capacidade) {
         Mesa novaMesa = new Mesa(numero, capacidade, StatusMesa.LIVRE);
         return mesaController.cadastrarMesa(novaMesa);
@@ -70,11 +78,19 @@ public class Fachada {
         return mesaController.buscarMesaPorNumero(numero);
     }
 
+    public boolean atualizarMesa(Mesa mesa) {
+        return mesaController.atualizarMesa(mesa);
+    }
+
+    public boolean removerMesa(int numero) {
+        return mesaController.removerMesa(numero);
+    }
+
     public boolean alterarStatusMesa(int numeroMesa, StatusMesa novoStatus) {
         return mesaController.alterarStatusMesa(numeroMesa, novoStatus);
     }
 
-    // === Operações de Pedido ===
+    // Operações de Pedido
     public Pedido criarPedido(int numeroMesa, String telefoneCliente) {
         return pedidoController.criarPedido(numeroMesa, telefoneCliente, mesaController, clienteController);
     }
@@ -87,19 +103,27 @@ public class Fachada {
         return pedidoController.registrarPagamento(idPedido, metodo);
     }
 
-    // === Operações de Cardápio ===
+    // Operações de Cardápio
     public boolean cadastrarItemCardapio(String nome, String desc, double preco, CategoriaItem categoria) {
         ItemCardapio novoItem = new ItemCardapio(nome, desc, preco, categoria);
         return itemCardapioController.cadastrarItemCardapio(novoItem);
     }
 
-    // === Operações de Funcionário ===
+    public boolean atualizarItemCardapio(ItemCardapio item) {
+        return itemCardapioController.atualizarItem(item);
+    }
+
+    public boolean removerItemCardapio(String nome) {
+        return itemCardapioController.removerItem(nome);
+    }
+
+    // Operações de Funcionário
     public boolean cadastrarFuncionario(String nome, String cargo) {
         Funcionario novo = new Funcionario(nome, cargo);
         return funcionarioController.cadastrarFuncionario(novo);
     }
 
-    // === Relatórios ===
+    // Relatórios
     public void gerarRelatorioVendas(LocalDate inicio, LocalDate fim) {
         relatorio.gerarVendasPorPeriodo(pedidoController.listarTodosPedidos(), inicio, fim);
     }
