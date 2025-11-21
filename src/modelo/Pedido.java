@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-// (imports omitidos para brevidade)
-
 public class Pedido {
 
     private static int proximoId = 1;
@@ -16,6 +14,7 @@ public class Pedido {
     private StatusPedido status;
     private Pagamento pagamento;
     private List<ItemPedido> itens;
+    private int numeroMesa;
 
     public Pedido(LocalDateTime dataHora, Cliente cliente) {
         this.id = proximoId++;
@@ -26,44 +25,21 @@ public class Pedido {
         this.status = StatusPedido.PENDENTE;
     }
 
-    // (Getters e Setters omitidos para brevidade...)
-    
     public int getId() {
         return id;
     }
-    
+
     public LocalDateTime getDataHora() {
         return dataHora;
     }
-    // ...
 
-    public void adicionarItem(ItemPedido item) {
-        this.itens.add(item);
+    public int getNumeroMesa() {
+        return numeroMesa;
     }
 
-    /**
-     * MODIFICADO: Agora usa a lógica de ItemPedido.calcularSubtotal().
-     */
-    public double calcularTotal() {
-        double total = 0.0;
-        for (ItemPedido item : itens) {
-            total += item.calcularSubtotal(); // Alteração aqui
-        }
-        this.valorTotal = total;
-        return valorTotal;
+    public void setNumeroMesa(int numeroMesa) {
+        this.numeroMesa = numeroMesa;
     }
-
-    public void atualizarStatus(StatusPedido novoStatus) {
-        this.status = novoStatus;
-        System.out.println("Status do pedido: " + novoStatus.getNome());
-    }
-
-    public double fecharConta() {
-        System.out.println("Fechando a conta do pedido...");
-        return calcularTotal();
-    }
-
-    // (Restante dos getters/setters)
 
     public double getValorTotal() {
         return valorTotal;
@@ -103,5 +79,28 @@ public class Pedido {
 
     public void setItens(List<ItemPedido> itens) {
         this.itens = itens;
+    }
+
+    public void adicionarItem(ItemPedido item) {
+        this.itens.add(item);
+    }
+
+    public double calcularTotal() {
+        double total = 0.0;
+        for (ItemPedido item : itens) {
+            total += item.calcularSubtotal();
+        }
+        this.valorTotal = total;
+        return valorTotal;
+    }
+
+    public void atualizarStatus(StatusPedido novoStatus) {
+        this.status = novoStatus;
+        System.out.println("Status do pedido: " + novoStatus.getNome());
+    }
+
+    public double fecharConta() {
+        System.out.println("Fechando a conta do pedido...");
+        return calcularTotal();
     }
 }

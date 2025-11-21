@@ -2,6 +2,7 @@ package negocio;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import modelo.*;
 import controller.*;
 
@@ -41,6 +42,18 @@ public class Fachada {
         return this.clienteController.buscarClientePorTelefone(telefone);
     }
 
+    public boolean atualizarCliente(Cliente cliente) {
+        return clienteController.atualizarCliente(cliente);
+    }
+
+    public boolean removerCliente(String telefone) {
+        return clienteController.removerCliente(telefone);
+    }
+
+    public List<Cliente> listarClientes() {
+        return clienteController.listarTodosClientes();
+    }
+
     public double consultarHistoricoCliente(Cliente cliente) {
         return cliente.consultarHistorico();
     }
@@ -60,6 +73,10 @@ public class Fachada {
         return reservaController.cancelarReserva(reserva);
     }
 
+    public List<Reserva> listarReservas() {
+        return reservaController.listarTodasReservas();
+    }
+
     // === Operações de Mesa ===
     public boolean cadastrarMesa(int numero, int capacidade) {
         Mesa novaMesa = new Mesa(numero, capacidade, StatusMesa.LIVRE);
@@ -70,12 +87,25 @@ public class Fachada {
         return mesaController.buscarMesaPorNumero(numero);
     }
 
+    public boolean atualizarMesa(Mesa mesa) {
+        return mesaController.atualizarMesa(mesa);
+    }
+
+    public boolean removerMesa(int numero) {
+        return mesaController.removerMesa(numero);
+    }
+
+    public List<Mesa> listarMesas() {
+        return mesaController.listarTodasMesas();
+    }
+
     public boolean alterarStatusMesa(int numeroMesa, StatusMesa novoStatus) {
         return mesaController.alterarStatusMesa(numeroMesa, novoStatus);
     }
 
     // === Operações de Pedido ===
     public Pedido criarPedido(int numeroMesa, String telefoneCliente) {
+        // Certifique-se de que o PedidoController.java foi atualizado conforme minha mensagem anterior
         return pedidoController.criarPedido(numeroMesa, telefoneCliente, mesaController, clienteController);
     }
 
@@ -84,13 +114,26 @@ public class Fachada {
     }
 
     public boolean registrarPagamento(int idPedido, MetodoPagamento metodo) {
-        return pedidoController.registrarPagamento(idPedido, metodo);
+        // Passamos 'this.mesaController' para permitir a liberação automática da mesa
+        return pedidoController.registrarPagamento(idPedido, metodo, this.mesaController);
     }
 
     // === Operações de Cardápio ===
     public boolean cadastrarItemCardapio(String nome, String desc, double preco, CategoriaItem categoria) {
         ItemCardapio novoItem = new ItemCardapio(nome, desc, preco, categoria);
         return itemCardapioController.cadastrarItemCardapio(novoItem);
+    }
+
+    public boolean atualizarItemCardapio(ItemCardapio item) {
+        return itemCardapioController.atualizarItem(item);
+    }
+
+    public boolean removerItemCardapio(String nome) {
+        return itemCardapioController.removerItem(nome);
+    }
+
+    public List<ItemCardapio> listarItensCardapio() {
+        return itemCardapioController.listarTodosItens();
     }
 
     // === Operações de Funcionário ===
