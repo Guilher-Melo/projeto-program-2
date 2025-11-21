@@ -3,6 +3,7 @@ package controller;
 import modelo.Pedido;
 import modelo.ItemPedido;
 import modelo.StatusPedido;
+import modelo.StatusMesa;
 import repositorio.IRepositorioPedido;
 import java.util.List;
 
@@ -18,7 +19,6 @@ public class PedidoController {
         if (pedido == null) {
             throw new IllegalArgumentException("Pedido não pode ser nulo");
         }
-
         repositorioPedido.cadastrar(pedido);
     }
 
@@ -99,6 +99,9 @@ public class PedidoController {
         }
 
         modelo.Pedido novoPedido = new modelo.Pedido(java.time.LocalDateTime.now(), cliente);
+
+        novoPedido.setNumeroMesa(numeroMesa);
+
         repositorioPedido.cadastrar(novoPedido);
         mesaController.alterarStatusMesa(numeroMesa, modelo.StatusMesa.OCUPADA);
 
@@ -128,7 +131,7 @@ public class PedidoController {
         return true;
     }
 
-    public boolean registrarPagamento(int idPedido, modelo.MetodoPagamento metodo) {
+    public boolean registrarPagamento(int idPedido, modelo.MetodoPagamento metodo, MesaController mesaController) {
         Pedido pedido = repositorioPedido.buscarPorId(idPedido);
         if (pedido == null) {
             return false;
@@ -144,6 +147,12 @@ public class PedidoController {
 
         pedido.setPagamento(pagamento);
         pedido.atualizarStatus(StatusPedido.ENTREGUE);
+
+        if (mesaController != null && pedido.getNumeroMesa() > 0) {
+            mesaController.alterarStatusMesa(pedido.getNumeroMesa(), StatusMesa.LIVRE);
+            System.out.println(">>> Mesa " + pedido.getNumeroMesa() + " liberada com sucesso após pagamento.");
+        }
+
         repositorioPedido.atualizar(pedido);
         return true;
     }

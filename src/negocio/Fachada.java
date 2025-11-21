@@ -2,6 +2,7 @@ package negocio;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import modelo.*;
 import controller.*;
 
@@ -31,7 +32,7 @@ public class Fachada {
         this.relatorio = new Relatorio();
     }
 
-    // Operações de Cliente
+    // === Operações de Cliente ===
     public boolean cadastrarCliente(String nome, String telefone, String email) {
         Cliente novoCliente = new Cliente(nome, telefone, email);
         return clienteController.cadastrarCliente(novoCliente);
@@ -49,11 +50,15 @@ public class Fachada {
         return clienteController.removerCliente(telefone);
     }
 
+    public List<Cliente> listarClientes() {
+        return clienteController.listarTodosClientes();
+    }
+
     public double consultarHistoricoCliente(Cliente cliente) {
         return cliente.consultarHistorico();
     }
 
-    // Operações de Reserva
+    // === Operações de Reserva ===
     public boolean fazerReserva(String telefoneCliente, Mesa mesa, LocalDateTime dataHora, int numeroPessoas) {
         Cliente cliente = clienteController.buscarClientePorTelefone(telefoneCliente);
         if (cliente == null) {
@@ -68,7 +73,11 @@ public class Fachada {
         return reservaController.cancelarReserva(reserva);
     }
 
-    // Operações de Mesa
+    public List<Reserva> listarReservas() {
+        return reservaController.listarTodasReservas();
+    }
+
+    // === Operações de Mesa ===
     public boolean cadastrarMesa(int numero, int capacidade) {
         Mesa novaMesa = new Mesa(numero, capacidade, StatusMesa.LIVRE);
         return mesaController.cadastrarMesa(novaMesa);
@@ -86,12 +95,17 @@ public class Fachada {
         return mesaController.removerMesa(numero);
     }
 
+    public List<Mesa> listarMesas() {
+        return mesaController.listarTodasMesas();
+    }
+
     public boolean alterarStatusMesa(int numeroMesa, StatusMesa novoStatus) {
         return mesaController.alterarStatusMesa(numeroMesa, novoStatus);
     }
 
-    // Operações de Pedido
+    // === Operações de Pedido ===
     public Pedido criarPedido(int numeroMesa, String telefoneCliente) {
+        // Certifique-se de que o PedidoController.java foi atualizado conforme minha mensagem anterior
         return pedidoController.criarPedido(numeroMesa, telefoneCliente, mesaController, clienteController);
     }
 
@@ -100,10 +114,11 @@ public class Fachada {
     }
 
     public boolean registrarPagamento(int idPedido, MetodoPagamento metodo) {
-        return pedidoController.registrarPagamento(idPedido, metodo);
+        // Passamos 'this.mesaController' para permitir a liberação automática da mesa
+        return pedidoController.registrarPagamento(idPedido, metodo, this.mesaController);
     }
 
-    // Operações de Cardápio
+    // === Operações de Cardápio ===
     public boolean cadastrarItemCardapio(String nome, String desc, double preco, CategoriaItem categoria) {
         ItemCardapio novoItem = new ItemCardapio(nome, desc, preco, categoria);
         return itemCardapioController.cadastrarItemCardapio(novoItem);
@@ -117,13 +132,17 @@ public class Fachada {
         return itemCardapioController.removerItem(nome);
     }
 
-    // Operações de Funcionário
+    public List<ItemCardapio> listarItensCardapio() {
+        return itemCardapioController.listarTodosItens();
+    }
+
+    // === Operações de Funcionário ===
     public boolean cadastrarFuncionario(String nome, String cargo) {
         Funcionario novo = new Funcionario(nome, cargo);
         return funcionarioController.cadastrarFuncionario(novo);
     }
 
-    // Relatórios
+    // === Relatórios ===
     public void gerarRelatorioVendas(LocalDate inicio, LocalDate fim) {
         relatorio.gerarVendasPorPeriodo(pedidoController.listarTodosPedidos(), inicio, fim);
     }
