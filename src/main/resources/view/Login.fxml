@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="CENTER" spacing="20.0"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gui.controlador.LoginController">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label text="Sistema de Restaurante" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <Label text="Digite seu nome de funcionário:" />
+
+    <TextField fx:id="campoNome" promptText="Ex: Admin" maxWidth="200" />
+
+    <Button text="Entrar no Sistema" onAction="#fazerLogin" />
+
+</VBox>
