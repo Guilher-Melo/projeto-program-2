@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="CENTER" spacing="15" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controlador.TelaPrincipalController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Menu Principal" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <Button text="Gestão de Mesas" maxWidth="200" onAction="#abrirMesas"/>
+    <Button text="Gestão de Clientes" maxWidth="200" onAction="#abrirClientes"/>
+</VBox>
