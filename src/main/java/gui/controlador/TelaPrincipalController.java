@@ -20,7 +20,8 @@ public class TelaPrincipalController implements IControlador {
 
     @FXML
     public void abrirClientes() {
-        System.out.println("Navegando para: Gestão de Clientes...");
+        GerenciadorTelas.getInstance().trocarTela("/view/GestaoClientes.fxml",
+                "Gestão de Clientes");
     }
 
     @FXML
