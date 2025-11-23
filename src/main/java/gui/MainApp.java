@@ -11,8 +11,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // 1. Inicialização do Sistema
-            // Criar Repositórios
+            // 1. Inicialização do Sistema (Repositórios)
             IRepositorioCliente repoCliente = new RepositorioClienteArray();
             IRepositorioReserva repoReserva = new RepositorioReservaArray();
             IRepositorioMesa repoMesa = new RepositorioMesaArray();
@@ -20,7 +19,7 @@ public class MainApp extends Application {
             IRepositorioItemCardapio repoItem = new RepositorioItemCardapioArray();
             IRepositorioFuncionario repoFunc = new RepositorioFuncionarioArray();
 
-            // Criar Controllers de Negócio
+            // 2. Inicialização dos Controllers
             ClienteController clienteController = new ClienteController(repoCliente);
             FuncionarioController funcionarioController = new FuncionarioController(repoFunc);
             ItemCardapioController itemCardapioController = new ItemCardapioController(repoItem);
@@ -28,7 +27,7 @@ public class MainApp extends Application {
             PedidoController pedidoController = new PedidoController(repoPedido);
             ReservaController reservaController = new ReservaController(repoReserva);
 
-            // Criar Fachada
+            // 3. Inicialização da Fachada
             Fachada fachada = new Fachada(
                     clienteController,
                     funcionarioController,
@@ -38,15 +37,24 @@ public class MainApp extends Application {
                     reservaController
             );
 
-            // Testes iniciais
+            // Cadastra algumas mesas
             fachada.cadastrarMesa(1, 4);
-            fachada.cadastrarFuncionario("Admin", "Gerente");
+            fachada.cadastrarMesa(2, 2);
 
-            // 2. Configurar o Gerenciador de Telas
+            try {
+                fachada.cadastrarFuncionario("Admin", "Gerente", "1234");
+                fachada.cadastrarFuncionario("Ana Cozinheira", "Cozinha", "1234");
+                fachada.cadastrarFuncionario("Carlos Garçom", "Garçom", "1234");
+                fachada.cadastrarFuncionario("Roberto Garçom", "Garçom", "1234");
+                fachada.cadastrarFuncionario("Juliana Caixa", "Atendente", "1234");
+
+                System.out.println(">>> Funcionários de teste cadastrados com sucesso!");
+            } catch (Exception e) {
+                System.err.println("Erro ao cadastrar funcionário inicial: " + e.getMessage());
+            }
+
             GerenciadorTelas.getInstance().inicializar(primaryStage, fachada);
 
-            // 3. Carregar a primeira tela (Login)
-            // Certifique-se de criar o arquivo Login.fxml na pasta resources/telas
             GerenciadorTelas.getInstance().trocarTela("/view/Login.fxml", "Login - Restaurante");
 
         } catch (Exception e) {

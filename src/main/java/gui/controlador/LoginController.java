@@ -1,10 +1,11 @@
-package gui.controlador; // Note que o pacote reflete as pastas
+package gui.controlador;
 
-import gui.GerenciadorTelas; // Importe sua classe Gerenciador
-import gui.controlador.IControlador; // Importe sua interface
+import gui.GerenciadorTelas;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import modelo.Funcionario;
 import negocio.Fachada;
 
 public class LoginController implements IControlador {
@@ -14,6 +15,9 @@ public class LoginController implements IControlador {
     @FXML
     private TextField campoNome;
 
+    @FXML
+    private PasswordField campoSenha;
+
     @Override
     public void setFachada(Fachada fachada) {
         this.fachada = fachada;
@@ -22,25 +26,36 @@ public class LoginController implements IControlador {
     @FXML
     public void fazerLogin() {
         String nome = campoNome.getText();
-        // Apenas um teste para ver se a fachada responde
-        // No futuro, você usaria fachada.buscarFuncionario(nome)
-        if (nome != null && !nome.isEmpty()) {
-            // ... dentro do if (sucesso) ...
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Login");
-            alert.setHeaderText("Sucesso");
-            alert.showAndWait(); // Espera o usuário dar OK
+        String senha = campoSenha.getText();
 
-            // A MÁGICA DA NAVEGAÇÃO:
-            // Como estamos dentro do pacote gui.controlador, precisamos importar o GerenciadorTelas de gui
-            gui.GerenciadorTelas.getInstance().trocarTela("/view/TelaPrincipal.fxml", "Menu Principal");
-             // Exemplo de navegação para uma próxima tela (se ela existisse)
-             // GerenciadorTelas.getInstance().trocarTela("/view/Principal.fxml", "Menu Principal");
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Atenção");
-            alert.setHeaderText("Campo vazio");
-            alert.showAndWait();
+        if (nome == null || nome.isEmpty() || senha == null || senha.isEmpty()) {
+            mostrarAlerta("Atenção", "Preencha usuário e senha.");
+            return;
         }
+
+        Funcionario funcionarioLogado = fachada.loginFuncionario(nome, senha);
+
+        if (funcionarioLogado != null) {
+            String cargo = funcionarioLogado.getCargo().toUpperCase(); // Transforma em maiúsculo para evitar erro
+
+            if (cargo.contains("COZINHA")) {
+                System.out.println("Login: Redirecionando para Cozinha...");
+                GerenciadorTelas.getInstance().trocarTela("/view/TelaCozinha.fxml", "Monitor de Cozinha");
+            } else {
+                System.out.println("Login: Redirecionando para Menu Principal...");
+                GerenciadorTelas.getInstance().trocarTela("/view/TelaPrincipal.fxml", "Menu Principal");
+            }
+
+        } else {
+            mostrarAlerta("Erro de Login", "Usuário ou senha incorretos.");
+        }
+    }
+
+    private void mostrarAlerta(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 }

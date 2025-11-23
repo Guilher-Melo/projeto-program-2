@@ -13,11 +13,13 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Label text="Sistema de Restaurante" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <Label text="Sistema de Restaurante" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-    <Label text="Digite seu nome de funcionário:" />
-
+    <Label text="Usuário:" />
     <TextField fx:id="campoNome" promptText="Ex: Admin" maxWidth="200" />
+
+    <Label text="Senha:" />
+    <PasswordField fx:id="campoSenha" promptText="Senha" maxWidth="200" />
 
     <Button text="Entrar no Sistema" onAction="#fazerLogin" />
 

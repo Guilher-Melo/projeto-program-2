@@ -4,13 +4,42 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="15" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controlador.TelaPrincipalController">
+<VBox alignment="CENTER" spacing="20"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gui.controlador.TelaPrincipalController"
+      style="-fx-background-color: #f0f0f0;">
+
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="40" right="40" bottom="40" left="40"/>
     </padding>
 
-    <Label text="Menu Principal" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+    <Label text="Menu Principal" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+    <Separator prefWidth="200" />
 
-    <Button text="Gestão de Mesas" maxWidth="200" onAction="#abrirMesas"/>
-    <Button text="Gestão de Clientes" maxWidth="200" onAction="#abrirClientes"/>
+    <Button text="Gestão de Mesas"
+            style="-fx-font-size: 16px; -fx-base: #4CAF50;"
+            prefWidth="300" prefHeight="50"
+            onAction="#abrirMesas"/>
+
+    <Button text="Gestão de Clientes"
+            style="-fx-font-size: 16px;"
+            prefWidth="300" prefHeight="50"
+            onAction="#abrirClientes"/>
+
+    <Button text="Gestão do Cardápio"
+            style="-fx-font-size: 16px;"
+            prefWidth="300" prefHeight="50"
+            onAction="#abrirCardapio"/>
+
+    <Button text="Reservas"
+            style="-fx-font-size: 16px;"
+            prefWidth="300" prefHeight="50"
+            onAction="#abrirReservas"/>
+
+    <Button text="Relatórios"
+            style="-fx-font-size: 16px; -fx-base: #2196F3;"
+            prefWidth="300" prefHeight="50"
+            onAction="#abrirRelatorios"/>
+
 </VBox>

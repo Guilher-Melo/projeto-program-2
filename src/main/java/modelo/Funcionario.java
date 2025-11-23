@@ -4,10 +4,12 @@ public class Funcionario {
 
     private String nome;
     private String cargo;
+    private String senha; // ADICIONADO
 
-    public Funcionario(String nome, String cargo) {
+    public Funcionario(String nome, String cargo, String senha) {
         this.nome = nome;
         this.cargo = cargo;
+        this.senha = senha;
     }
 
     public String getNome() {
@@ -26,7 +28,11 @@ public class Funcionario {
         this.cargo = cargo;
     }
 
-    // A lógica de criarPedido, adicionarItemPedido e registrarPagamento
-    // foi movida para a camada de Negócio (Fachada),
-    // pois são regras de negócio e não responsabilidade do "Funcionario".
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 }

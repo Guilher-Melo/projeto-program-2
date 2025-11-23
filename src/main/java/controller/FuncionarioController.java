@@ -21,13 +21,30 @@ public class FuncionarioController {
             throw new IllegalArgumentException("Nome do funcionário não pode ser nulo ou vazio");
         }
 
-        // Verifica se já existe um funcionário com o mesmo nome
+        if (funcionario.getSenha() == null || funcionario.getSenha().trim().isEmpty()) {
+             throw new IllegalArgumentException("Senha é obrigatória");
+        }
+
         if (repositorioFuncionario.buscarPorNome(funcionario.getNome()) != null) {
             return false;
         }
 
         repositorioFuncionario.cadastrar(funcionario);
         return true;
+    }
+
+    public Funcionario login(String nome, String senha) {
+        if (nome == null || senha == null) {
+            return null;
+        }
+
+        Funcionario f = repositorioFuncionario.buscarPorNome(nome);
+
+        if (f != null && f.getSenha().equals(senha)) {
+            return f;
+        }
+
+        return null;
     }
 
     public Funcionario buscarFuncionarioPorNome(String nome) {
@@ -38,26 +55,17 @@ public class FuncionarioController {
     }
 
     public boolean atualizarFuncionario(Funcionario funcionarioAtualizado) {
-        if (funcionarioAtualizado == null) {
-            throw new IllegalArgumentException("Funcionário não pode ser nulo");
-        }
-
-        Funcionario funcionarioExistente = repositorioFuncionario.buscarPorNome(funcionarioAtualizado.getNome());
-        if (funcionarioExistente == null) {
-            return false;
-        }
-
+        if (funcionarioAtualizado == null) return false;
+        Funcionario f = repositorioFuncionario.buscarPorNome(funcionarioAtualizado.getNome());
+        if (f == null) return false;
         repositorioFuncionario.atualizar(funcionarioAtualizado);
         return true;
     }
 
     public boolean removerFuncionario(String nome) {
-        Funcionario funcionario = repositorioFuncionario.buscarPorNome(nome);
-        if (funcionario == null) {
-            return false;
-        }
-
-        repositorioFuncionario.remover(funcionario);
+        Funcionario f = repositorioFuncionario.buscarPorNome(nome);
+        if (f == null) return false;
+        repositorioFuncionario.remover(f);
         return true;
     }
 
