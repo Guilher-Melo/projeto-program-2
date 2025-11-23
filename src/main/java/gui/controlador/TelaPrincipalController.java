@@ -1,5 +1,6 @@
 package gui.controlador;
 
+import gui.GerenciadorTelas;
 import javafx.fxml.FXML;
 import negocio.Fachada;
 
@@ -12,15 +13,28 @@ public class TelaPrincipalController implements IControlador {
         this.fachada = fachada;
     }
 
-    // Aqui vamos ligar os botões do menu no futuro
     @FXML
     public void abrirMesas() {
-        System.out.println("Navegar para Mesas (Em breve)");
-        // GerenciadorTelas.getInstance().trocarTela("/view/Mesas.fxml", "Mesas");
+        System.out.println("Navegando para: Gestão de Mesas...");
     }
 
     @FXML
     public void abrirClientes() {
-        System.out.println("Navegar para Clientes (Em breve)");
+        System.out.println("Navegando para: Gestão de Clientes...");
+    }
+
+    @FXML
+    public void abrirCardapio() {
+        System.out.println("Navegando para: Gestão do Cardápio...");
+    }
+
+    @FXML
+    public void abrirReservas() {
+        System.out.println("Navegando para: Reservas...");
+    }
+
+    @FXML
+    public void abrirRelatorios() {
+        System.out.println("Navegando para: Relatórios...");
     }
 }
