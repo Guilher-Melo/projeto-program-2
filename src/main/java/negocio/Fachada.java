@@ -3,8 +3,23 @@ package negocio;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import modelo.*;
-import controller.*;
+
+import controller.ClienteController;
+import controller.FuncionarioController;
+import controller.ItemCardapioController;
+import controller.MesaController;
+import controller.PedidoController;
+import controller.ReservaController;
+import modelo.CategoriaItem;
+import modelo.Cliente;
+import modelo.Funcionario;
+import modelo.ItemCardapio;
+import modelo.Mesa;
+import modelo.MetodoPagamento;
+import modelo.Pedido;
+import modelo.Relatorio;
+import modelo.Reserva;
+import modelo.StatusMesa;
 
 public class Fachada {
 
@@ -151,11 +166,28 @@ public class Fachada {
             return false;
         }
         Reserva novaReserva = new Reserva(dataHora, numeroPessoas, cliente, mesa);
-        return reservaController.fazerReserva(novaReserva, mesa);
+        
+        // Tenta realizar a reserva no controlador de reservas
+        boolean sucesso = reservaController.fazerReserva(novaReserva, mesa);
+        
+        // CORREÇÃO: Se reservou com sucesso, altera o status da mesa para RESERVADA
+        if (sucesso) {
+            mesaController.alterarStatusMesa(mesa.getNumero(), StatusMesa.RESERVADA);
+        }
+        
+        return sucesso;
     }
 
     public boolean cancelarReserva(Reserva reserva) {
-        return reservaController.cancelarReserva(reserva);
+        // Tenta cancelar a reserva
+        boolean sucesso = reservaController.cancelarReserva(reserva);
+        
+        // CORREÇÃO: Se cancelou com sucesso, libera a mesa (status LIVRE)
+        if (sucesso && reserva.getMesa() != null) {
+            mesaController.alterarStatusMesa(reserva.getMesa().getNumero(), StatusMesa.LIVRE);
+        }
+        
+        return sucesso;
     }
 
     public List<Reserva> listarReservas() {
