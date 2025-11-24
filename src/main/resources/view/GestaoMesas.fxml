@@ -5,9 +5,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -19,7 +19,9 @@
         <VBox style="-fx-background-color: #4CAF50; -fx-padding: 15;">
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="Gestão de Mesas">
-                    <font><Font name="System Bold" size="24" /></font>
+                    <font>
+                        <Font name="System Bold" size="24" />
+                    </font>
                 </Label>
                 <Region HBox.hgrow="ALWAYS" />
                 <Button onAction="#voltarParaPrincipal" style="-fx-background-color: white; -fx-text-fill: #4CAF50; -fx-font-weight: bold;" text="← Voltar" />
