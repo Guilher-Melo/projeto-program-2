@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="gui.controlador.ReservasController"
+            style="-fx-background-color: #f5f5f5;">
+    
+    <top>
+        <VBox style="-fx-background-color: #673AB7; -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Gestão de Reservas" style="-fx-text-fill: white; -fx-font-weight: bold;">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="← Voltar" onAction="#voltarParaPrincipal" 
+                        style="-fx-background-color: white; -fx-text-fill: #673AB7; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #ddd; -fx-border-width: 1;">
+                <Label text="Nova Reserva" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                
+                <GridPane hgap="15" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints minWidth="100"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+                    
+                    <Label text="Cliente:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="comboCliente" promptText="Selecione o Cliente..." maxWidth="Infinity" 
+                              GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    
+                    <Label text="Mesa:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                    <ComboBox fx:id="comboMesa" promptText="Selecione a Mesa..." maxWidth="Infinity" 
+                              GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                    
+                    <Label text="Data:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <DatePicker fx:id="dtData" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    
+                    <Label text="Hora (HH:mm):" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                    <HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="3" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtHora" promptText="19:30" prefWidth="100"/>
+                        <Label text="Pessoas:"/>
+                        <TextField fx:id="txtPessoas" promptText="2" prefWidth="60"/>
+                    </HBox>
+                </GridPane>
+                
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button text="Confirmar Reserva" onAction="#cadastrarReserva" 
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    <Button text="Limpar" onAction="#limparFormulario"
+                            style="-fx-background-color: #9E9E9E; -fx-text-fill: white;"/>
+                </HBox>
+            </VBox>
+            
+            <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 15;">
+                <HBox>
+                    <Label text="Reservas Agendadas" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="🔄 Atualizar" onAction="#carregarReservas" style="-fx-base: #2196F3; -fx-text-fill: white;"/>
+                </HBox>
+                
+                <TableView fx:id="tabelaReservas" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colDataHora" text="Data/Hora" prefWidth="150"/>
+                        <TableColumn fx:id="colCliente" text="Cliente" prefWidth="200"/>
+                        <TableColumn fx:id="colMesa" text="Mesa" prefWidth="100"/>
+                        <TableColumn fx:id="colPessoas" text="Pessoas" prefWidth="80"/>
+                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="120"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Nenhuma reserva encontrada."/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

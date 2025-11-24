@@ -15,7 +15,8 @@ public class TelaPrincipalController implements IControlador {
 
     @FXML
     public void abrirMesas() {
-        System.out.println("Navegando para: Gestão de Mesas...");
+        // Substitua o System.out.println por isso:
+        GerenciadorTelas.getInstance().trocarTela("/view/GestaoMesas.fxml", "Gestão de Mesas");
     }
 
     @FXML
@@ -26,12 +27,13 @@ public class TelaPrincipalController implements IControlador {
 
     @FXML
     public void abrirCardapio() {
-        System.out.println("Navegando para: Gestão do Cardápio...");
+        // Substitua o System.out.println por:
+        GerenciadorTelas.getInstance().trocarTela("/view/GestaoCardapio.fxml", "Gestão de Cardápio");
     }
 
     @FXML
     public void abrirReservas() {
-        System.out.println("Navegando para: Reservas...");
+        GerenciadorTelas.getInstance().trocarTela("/view/Reservas.fxml", "Gestão de Reservas");
     }
 
     @FXML

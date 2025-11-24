@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="gui.controlador.GestaoCardapioController"
+            style="-fx-background-color: #f5f5f5;">
+    
+    <top>
+        <VBox style="-fx-background-color: #FF9800; -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Gestão de Cardápio" style="-fx-text-fill: white; -fx-font-weight: bold;">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="← Voltar" onAction="#voltarParaPrincipal" 
+                        style="-fx-background-color: white; -fx-text-fill: #FF9800; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #ddd; -fx-border-width: 1;">
+                <Label text="Cadastro de Item" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                
+                <GridPane hgap="15" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+                    
+                    <Label text="Nome do Item:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="txtNome" promptText="Ex: X-Bacon" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    
+                    <Label text="Descrição:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="txtDescricao" promptText="Ingredientes, detalhes..." GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    
+                    <Label text="Preço (R$):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <HBox spacing="15" GridPane.rowIndex="2" GridPane.columnIndex="1" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtPreco" promptText="0.00" prefWidth="150"/>
+                        
+                        <Label text="Categoria:"/>
+                        <ComboBox fx:id="comboCategoria" prefWidth="200" promptText="Selecione..."/>
+                    </HBox>
+
+                    <Label text="Status:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <CheckBox fx:id="chkDisponivel" text="Item Disponível para venda" selected="true" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                </GridPane>
+                
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button text="Cadastrar" onAction="#cadastrarItem" 
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    
+                    <Button text="Salvar Alterações" fx:id="btnSalvar" onAction="#atualizarItem" disable="true"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                            
+                    <Button text="Limpar" onAction="#limparFormulario"
+                            style="-fx-background-color: #9E9E9E; -fx-text-fill: white;"/>
+                </HBox>
+            </VBox>
+            
+            <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 15;">
+                <HBox>
+                    <Label text="Itens do Cardápio" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="🔄 Atualizar Lista" onAction="#carregarItens" style="-fx-base: #FF9800; -fx-text-fill: white;"/>
+                </HBox>
+                
+                <TableView fx:id="tabelaItens" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colNome" text="Nome" prefWidth="180"/>
+                        <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="120"/>
+                        <TableColumn fx:id="colPreco" text="Preço" prefWidth="100"/>
+                        <TableColumn fx:id="colDisponivel" text="Disponível" prefWidth="100"/>
+                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="220"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Nenhum item cadastrado."/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+            
+        </VBox>
+    </center>
+</BorderPane>

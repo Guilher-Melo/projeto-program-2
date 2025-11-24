@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="gui.controlador.VisualizacaoCardapioController"
+      spacing="15" alignment="TOP_CENTER"
+      style="-fx-background-color: white; -fx-padding: 20; -fx-border-color: #333; -fx-border-width: 1;">
+
+    <Label text="Adicionar Item ao Pedido" style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #333;"/>
+
+    <TableView fx:id="tabelaItens" VBox.vgrow="ALWAYS" prefHeight="300" prefWidth="500">
+        <columns>
+            <TableColumn fx:id="colNome" text="Item" prefWidth="180"/>
+            <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="100"/>
+            <TableColumn fx:id="colPreco" text="Preço" prefWidth="90"/>
+            <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="120"/>
+        </columns>
+        <placeholder>
+            <Label text="Carregando cardápio..."/>
+        </placeholder>
+    </TableView>
+
+    <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-background-color: #f9f9f9; -fx-padding: 10; -fx-background-radius: 5;">
+        
+        <Label text="Quantidade:" style="-fx-font-weight: bold;"/>
+        <Spinner fx:id="spinnerQuantidade" prefWidth="80" editable="true"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="Cancelar" onAction="#fecharJanela" 
+                style="-fx-background-color: #9E9E9E; -fx-text-fill: white;"/>
+        
+        <Button text="Adicionar ao Pedido" onAction="#confirmarAdicao" 
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    </HBox>
+
+</VBox>
