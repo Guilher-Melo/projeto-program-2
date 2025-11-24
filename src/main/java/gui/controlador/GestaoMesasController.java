@@ -6,7 +6,7 @@ import gui.GerenciadorTelas;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.text.TextAlignment;
 import modelo.Mesa;
 import modelo.StatusMesa;
@@ -15,7 +15,7 @@ import negocio.Fachada;
 public class GestaoMesasController implements IControlador {
 
     @FXML
-    private FlowPane painelMesas;
+    private TilePane painelMesas; 
 
     private Fachada fachada;
 

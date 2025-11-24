@@ -11,15 +11,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controlador.GestaoMesasController">
+<BorderPane style="-fx-background-color: #f5f5f5;"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="gui.controlador.GestaoMesasController">
     
     <top>
         <VBox style="-fx-background-color: #4CAF50; -fx-padding: 15;">
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="Gestão de Mesas">
-                    <font>
-                        <Font name="System Bold" size="24" />
-                    </font>
+                    <font><Font name="System Bold" size="24" /></font>
                 </Label>
                 <Region HBox.hgrow="ALWAYS" />
                 <Button onAction="#voltarParaPrincipal" style="-fx-background-color: white; -fx-text-fill: #4CAF50; -fx-font-weight: bold;" text="← Voltar" />
@@ -30,8 +30,9 @@
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
             <content>
-                <FlowPane fx:id="painelMesas" hgap="20" vgap="20" style="-fx-padding: 20;">
-                    </FlowPane>
+                <TilePane fx:id="painelMesas" hgap="20" vgap="20" prefColumns="4" 
+                          alignment="TOP_CENTER" style="-fx-padding: 20;">
+                </TilePane>
             </content>
         </ScrollPane>
     </center>
