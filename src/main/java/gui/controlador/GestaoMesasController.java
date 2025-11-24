@@ -1,17 +1,16 @@
 package gui.controlador;
 
+import java.util.List;
+
 import gui.GerenciadorTelas;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
-import javafx.geometry.Pos;
 import javafx.scene.text.TextAlignment;
 import modelo.Mesa;
 import modelo.StatusMesa;
 import negocio.Fachada;
-
-import java.util.List;
 
 public class GestaoMesasController implements IControlador {
 
@@ -46,11 +45,11 @@ public class GestaoMesasController implements IControlador {
     }
 
     private Button criarBotaoMesa(Mesa mesa) {
-        // Texto do botão: Número e Capacidade
+        // Texto do botão
         String texto = "Mesa " + mesa.getNumero() + "\n(" + mesa.getCapacidade() + " lug.)\n" + mesa.getStatus().getNome();
         Button btn = new Button(texto);
 
-        // Estilo fixo (quadrado)
+        // Estilo fixo
         btn.setPrefSize(140, 140);
         btn.setTextAlignment(TextAlignment.CENTER);
         btn.setWrapText(true);
@@ -60,41 +59,26 @@ public class GestaoMesasController implements IControlador {
         if (mesa.getStatus() == StatusMesa.LIVRE) {
             // VERDE
             btn.setStyle(btn.getStyle() + "-fx-background-color: #4CAF50; -fx-text-fill: white;");
-            
-            // Ação: Navegar para Pedido
-            btn.setOnAction(e -> abrirTelaPedido(mesa));
-            
         } else if (mesa.getStatus() == StatusMesa.OCUPADA) {
             // VERMELHO
             btn.setStyle(btn.getStyle() + "-fx-background-color: #F44336; -fx-text-fill: white;");
-            
-            // Ação: Ver detalhes ou avisar que está ocupada
-            btn.setOnAction(e -> mostrarAlerta("Mesa Ocupada", "A Mesa " + mesa.getNumero() + " já está ocupada."));
-            
         } else if (mesa.getStatus() == StatusMesa.RESERVADA) {
             // LARANJA
             btn.setStyle(btn.getStyle() + "-fx-background-color: #FF9800; -fx-text-fill: white;");
-             btn.setOnAction(e -> mostrarAlerta("Mesa Reservada", "A Mesa " + mesa.getNumero() + " está reservada."));
         } else {
-            // CINZA (Manutenção, etc)
+            // CINZA
             btn.setStyle(btn.getStyle() + "-fx-background-color: #9E9E9E; -fx-text-fill: white;");
         }
+
+        // AÇÃO UNIFICADA: Independente do status, abre a tela de pedido
+        btn.setOnAction(e -> abrirTelaPedido(mesa));
 
         return btn;
     }
 
     private void abrirTelaPedido(Mesa mesa) {
-        System.out.println(">>> Navegando para Tela de Pedido da Mesa " + mesa.getNumero());
-        
-        // TODO: Você precisará criar a "TelaPedido.fxml" e seu controlador.
-        // Como o GerenciadorTelas atual é simples, ele não passa parâmetros (como o ID da mesa).
-        // Sugestão temporária: Guardar o ID da mesa selecionada na Fachada ou num Singleton "Sessao"
-        // antes de trocar de tela.
-        
-        // Exemplo de navegação (crie o arquivo FXML depois):
-        // GerenciadorTelas.getInstance().trocarTela("/view/TelaPedido.fxml", "Pedido - Mesa " + mesa.getNumero());
-        
-        mostrarAlerta("Em Desenvolvimento", "Ir para tela de pedido da Mesa " + mesa.getNumero());
+        // Chama o gerenciador para abrir a tela passando o ID da mesa
+        GerenciadorTelas.getInstance().abrirTelaPedido(mesa.getNumero());
     }
 
     @FXML

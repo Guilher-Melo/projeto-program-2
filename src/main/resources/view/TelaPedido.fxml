@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="gui.controlador.TelaPedidoController"
+            style="-fx-background-color: #f5f5f5;">
+
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #2196F3; -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Button text="← Voltar" onAction="#voltar" style="-fx-background-color: white; -fx-text-fill: #2196F3;"/>
+                <Label fx:id="lblTituloMesa" text="Pedido - Mesa ??" textFill="white">
+                    <font><Font name="System Bold" size="20"/></font>
+                </Label>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: rgba(255,255,255,0.2); -fx-padding: 10; -fx-background-radius: 5;">
+                <Label text="Cliente:" textFill="white" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtTelefoneCliente" promptText="Telefone (ex: 99999-9999)" prefWidth="150"/>
+                <Button text="🔍 Buscar" onAction="#buscarCliente" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+                <Label fx:id="lblNomeCliente" text="Cliente não identificado" textFill="white" style="-fx-font-style: italic;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            
+            <TableView fx:id="tabelaItens" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colItem" text="Item" prefWidth="250"/>
+                    <TableColumn fx:id="colQtd" text="Qtd" prefWidth="50"/>
+                    <TableColumn fx:id="colPreco" text="Preço Unit." prefWidth="100"/>
+                    <TableColumn fx:id="colTotal" text="Subtotal" prefWidth="100"/>
+                </columns>
+                <placeholder>
+                    <Label text="Nenhum item adicionado ao pedido."/>
+                </placeholder>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #e0e0e0; -fx-border-color: #ccc; -fx-border-width: 1 0 0 0;">
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Label text="Total do Pedido:" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblValorTotal" text="R$ 0,00" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+            </HBox>
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="+ Adicionar Item" onAction="#abrirCardapio" 
+                        prefWidth="200" prefHeight="40"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                <Button text="💲 Fechar Conta" onAction="#fecharConta" 
+                        prefWidth="200" prefHeight="40"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>

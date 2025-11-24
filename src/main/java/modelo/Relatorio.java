@@ -5,12 +5,13 @@ import java.util.List;
 
 public class Relatorio {
 
-    public void gerarVendasPorPeriodo(List<Pedido> todosPedidos, LocalDate inicio, LocalDate fim) {
-        System.out.println("\n--- Relatório de Vendas de " + inicio + " a " + fim + " ---");
+    public String gerarVendasPorPeriodo(List<Pedido> todosPedidos, LocalDate inicio, LocalDate fim) {
+        StringBuilder sb = new StringBuilder(); // Usado para montar o texto
+        sb.append("--- Relatório de Vendas de ").append(inicio).append(" a ").append(fim).append(" ---\n\n");
 
         if (todosPedidos == null || todosPedidos.isEmpty()) {
-            System.out.println("Nenhum pedido encontrado.");
-            return;
+            sb.append("Nenhum pedido encontrado.\n");
+            return sb.toString();
         }
 
         double totalVendas = 0;
@@ -29,13 +30,14 @@ public class Relatorio {
             }
         }
 
-        System.out.println("Número de pedidos no período: " + numPedidos);
-        System.out.println("Valor total de vendas: R$ " + String.format("%.2f", totalVendas));
+        sb.append("Número de pedidos no período: ").append(numPedidos).append("\n");
+        sb.append("Valor total de vendas: R$ ").append(String.format("%.2f", totalVendas)).append("\n");
+        
+        return sb.toString();
     }
 
-    public void gerarItensMaisVendidos(List<Pedido> todosPedidos) {
-        System.out.println("\n--- Relatório de Itens Mais Vendidos ---");
-        System.out.println("(Lógica de itens mais vendidos a ser implementada)");
+    public String gerarItensMaisVendidos(List<Pedido> todosPedidos) {
+        return "\n--- Relatório de Itens Mais Vendidos ---\n(Lógica de itens mais vendidos a ser implementada)\n";
     }
 
     public void exportar(String formato) {

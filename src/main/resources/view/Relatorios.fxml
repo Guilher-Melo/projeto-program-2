@@ -5,35 +5,64 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" spacing="15.0" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.example.sistemapedidosfx.RelatoriosController">
-   <children>
-      <Label text="Tela de Relatórios">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <VBox spacing="5.0">
-         <children>
-            <Label text="Data de Início:" />
-            <DatePicker fx:id="dataInicioPicker" prefWidth="250.0" />
-         </children>
-      </VBox>
-      <VBox spacing="5.0">
-         <children>
-            <Label text="Data de Fim:" />
-            <DatePicker fx:id="dataFimPicker" prefWidth="250.0" />
-         </children>
-      </VBox>
-      <Button fx:id="btnRelatorioVendas" mnemonicParsing="false" onAction="#gerarRelatorioVendasAction" prefWidth="250.0" text="Gerar Relatório de Vendas" />
-      <Button fx:id="btnItensMaisVendidos" mnemonicParsing="false" onAction="#gerarItensMaisVendidosAction" prefWidth="250.0" text="Itens Mais Vendidos" />
-      <TextArea fx:id="txtAreaRelatorios" editable="false" prefHeight="300.0" promptText="O relatório será exibido aqui..." wrapText="true">
-         <VBox.margin>
-            <Insets top="10.0" />
-         </VBox.margin>
-      </TextArea>
-   </children>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="gui.controlador.RelatoriosController"
+            style="-fx-background-color: #f5f5f5;">
+
+    <top>
+        <VBox style="-fx-background-color: #2196F3; -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Relatórios e Estatísticas" style="-fx-text-fill: white; -fx-font-weight: bold;">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="← Voltar" onAction="#voltarParaPrincipal" 
+                        style="-fx-background-color: white; -fx-text-fill: #2196F3; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="15.0">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <VBox spacing="5.0">
+               <children>
+                  <Label text="Data de Início:" style="-fx-font-weight: bold;"/>
+                  <DatePicker fx:id="dataInicioPicker" prefWidth="300.0" />
+               </children>
+            </VBox>
+            
+            <VBox spacing="5.0">
+               <children>
+                  <Label text="Data de Fim:" style="-fx-font-weight: bold;"/>
+                  <DatePicker fx:id="dataFimPicker" prefWidth="300.0" />
+               </children>
+            </VBox>
+            
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="btnRelatorioVendas" onAction="#gerarRelatorioVendasAction" 
+                        prefWidth="200.0" text="Relatório de Vendas" 
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+         
+                <Button fx:id="btnItensMaisVendidos" onAction="#gerarItensMaisVendidosAction" 
+                        prefWidth="200.0" text="Itens Mais Vendidos"
+                        style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <TextArea fx:id="txtAreaRelatorios" editable="false" VBox.vgrow="ALWAYS" 
+                      promptText="O resultado do relatório aparecerá aqui..." wrapText="true"
+                      style="-fx-font-family: 'Monospaced';"/>
+        </VBox>
+    </center>
+</BorderPane>

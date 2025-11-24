@@ -1,13 +1,12 @@
 package gui;
 
-import gui.controlador.IControlador;
+import java.io.IOException;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import negocio.Fachada;
-
-import java.io.IOException;
 
 public class GerenciadorTelas {
 
@@ -31,17 +30,14 @@ public class GerenciadorTelas {
 
     public void trocarTela(String caminhoFxml, String titulo) {
         try {
-            // Carrega o arquivo FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource(caminhoFxml));
             Parent root = loader.load();
 
-            // INJEÇÃO DE DEPENDÊNCIA: Passa a fachada para o controlador
             Object controlador = loader.getController();
             if (controlador instanceof gui.controlador.IControlador) {
                 ((gui.controlador.IControlador) controlador).setFachada(this.fachada);
             }
 
-            // Mostra a nova cena
             Scene scene = new Scene(root);
             stagePrincipal.setScene(scene);
             stagePrincipal.setTitle(titulo);
@@ -49,10 +45,38 @@ public class GerenciadorTelas {
 
         } catch (IOException e) {
             e.printStackTrace();
-            // Mantemos apenas este erro real, pois é útil para saber se falhou
             System.err.println("Erro ao carregar tela: " + caminhoFxml);
         }
     }
+
+
+    public void abrirTelaPedido(int idMesa) {
+        try {
+            // Carrega o FXML do Pedido
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TelaPedido.fxml"));
+            Parent root = loader.load();
+
+            // Pega o controlador específico da TelaPedido
+            gui.controlador.TelaPedidoController controller = loader.getController();
+            
+            // Passa a fachada (padrão)
+            controller.setFachada(this.fachada);
+            
+            // Passa o ID da mesa (Novo!)
+            controller.setMesa(idMesa);
+
+            // Troca a cena
+            Scene scene = new Scene(root);
+            stagePrincipal.setScene(scene);
+            stagePrincipal.setTitle("Pedido - Mesa " + idMesa);
+            stagePrincipal.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Erro ao abrir Tela de Pedido para a mesa " + idMesa);
+        }
+    }
+    // -------------------------------------
 
     public Fachada getFachada() {
         return fachada;

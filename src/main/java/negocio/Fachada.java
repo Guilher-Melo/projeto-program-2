@@ -198,11 +198,13 @@ public class Fachada {
     //                      RELATÓRIOS
     // =======================================================
 
-    public void gerarRelatorioVendas(LocalDate inicio, LocalDate fim) {
-        relatorio.gerarVendasPorPeriodo(pedidoController.listarTodosPedidos(), inicio, fim);
+    public String gerarRelatorioVendas(LocalDate inicio, LocalDate fim) {
+        // Retorna a String gerada pela classe Relatorio
+        return relatorio.gerarVendasPorPeriodo(pedidoController.listarTodosPedidos(), inicio, fim);
     }
 
-    public void gerarRelatorioItensMaisVendidos() {
-        relatorio.gerarItensMaisVendidos(pedidoController.listarTodosPedidos());
+    public String gerarRelatorioItensMaisVendidos() {
+        // Retorna a String gerada pela classe Relatorio
+        return relatorio.gerarItensMaisVendidos(pedidoController.listarTodosPedidos());
     }
 }

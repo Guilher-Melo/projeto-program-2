@@ -1,10 +1,26 @@
 package gui;
 
+import controller.ClienteController;
+import controller.FuncionarioController;
+import controller.ItemCardapioController;
+import controller.MesaController;
+import controller.PedidoController;
+import controller.ReservaController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import negocio.Fachada;
-import repositorio.*;
-import controller.*;
+import repositorio.IRepositorioCliente;
+import repositorio.IRepositorioFuncionario;
+import repositorio.IRepositorioItemCardapio;
+import repositorio.IRepositorioMesa;
+import repositorio.IRepositorioPedido;
+import repositorio.IRepositorioReserva;
+import repositorio.RepositorioClienteArray;
+import repositorio.RepositorioFuncionarioArray;
+import repositorio.RepositorioItemCardapioArray;
+import repositorio.RepositorioMesaArray;
+import repositorio.RepositorioPedidoArray;
+import repositorio.RepositorioReservaArray;
 
 public class MainApp extends Application {
 
@@ -38,8 +54,12 @@ public class MainApp extends Application {
             );
 
             // Cadastra algumas mesas
-            fachada.cadastrarMesa(1, 4);
-            fachada.cadastrarMesa(2, 2);
+            //fachada.cadastrarMesa(1, 4);
+            //fachada.cadastrarMesa(2, 2);
+            for (int i = 1; i <= 12; i++) {
+                int capacidade = (i % 2 == 0) ? 2 : 4;
+                fachada.cadastrarMesa(i, capacidade);
+            }
 
             try {
                 fachada.cadastrarFuncionario("Admin", "Gerente", "1234");
