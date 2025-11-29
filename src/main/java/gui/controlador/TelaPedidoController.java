@@ -62,30 +62,17 @@ public class TelaPedidoController implements IControlador {
 
     // Lógica para criar ou carregar pedido (Checklist Item 3)
     private void inicializarPedido() {
-        // Tenta achar um pedido existente para essa mesa (se já estiver ocupada)
-        // Como sua fachada não tem "buscarPedidoPorMesa", vamos simplificar:
-        // Sempre tentamos criar. A fachada deve tratar se a mesa já está ocupada no
-        // backend.
-        // Se a mesa já tiver pedido, precisamos recuperá-lo.
-        // OBS: Para simplificar aqui, vamos assumir criação de novo pedido se não
-        // tivermos referência.
+        // Verifica se já existe um pedido ativo para esta mesa
+        this.pedidoAtual = fachada.listarPedidos().stream()
+                .filter(ped -> ped.getNumeroMesa() == idMesaAtual
+                        && ped.getStatus() != modelo.StatusPedido.ENTREGUE
+                        && ped.getStatus() != modelo.StatusPedido.CANCELADO)
+                .findFirst()
+                .orElse(null);
 
-        // Tenta criar pedido sem cliente inicialmente
-        Pedido p = fachada.criarPedido(idMesaAtual, null);
-
-        if (p == null) {
-            // Se retornou null, a mesa provavelmente já está ocupada.
-            // Precisaríamos de um método fachada.buscarPedidoPorMesa(idMesa).
-            // Workaround temporário: procurar na lista de todos os pedidos um que seja
-            // dessa mesa e esteja ABERTO.
-            this.pedidoAtual = fachada.listarPedidos().stream()
-                    .filter(ped -> ped.getNumeroMesa() == idMesaAtual && ped.getStatus() != modelo.StatusPedido.ENTREGUE
-                            && ped.getStatus() != modelo.StatusPedido.CANCELADO)
-                    .findFirst()
-                    .orElse(null);
-        } else {
-            this.pedidoAtual = p;
-        }
+        // NÃO cria pedido automaticamente - apenas carrega se existir
+        // O pedido será criado quando o usuário adicionar o primeiro item ou vincular
+        // cliente
 
         configurarTabela();
         atualizarTela();
@@ -98,6 +85,28 @@ public class TelaPedidoController implements IControlador {
                 String.format("R$ %.2f", cell.getValue().getItemCardapio().getPreco())));
         colTotal.setCellValueFactory(
                 cell -> new SimpleStringProperty(String.format("R$ %.2f", cell.getValue().calcularSubtotal())));
+    }
+
+    // Cria o pedido apenas quando realmente necessário
+    private boolean garantirPedidoExiste() {
+        if (pedidoAtual != null) {
+            return true;
+        }
+
+        // Cria o pedido
+        Pedido p = fachada.criarPedido(idMesaAtual, null);
+        if (p == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Não foi possível criar pedido");
+            alert.setContentText("A mesa pode já estar ocupada ou indisponível.");
+            alert.showAndWait();
+            return false;
+        }
+
+        this.pedidoAtual = p;
+        atualizarTela();
+        return true;
     }
 
     public void atualizarTela() {
@@ -127,6 +136,11 @@ public class TelaPedidoController implements IControlador {
         if (telefone.isEmpty())
             return;
 
+        // Garante que o pedido existe antes de vincular cliente
+        if (!garantirPedidoExiste()) {
+            return;
+        }
+
         Cliente c = fachada.buscarClientePorTelefone(telefone);
         if (c != null) {
             if (pedidoAtual != null) {
@@ -146,6 +160,11 @@ public class TelaPedidoController implements IControlador {
     // Trecho do TelaPedidoController.java feito anteriormente
     @FXML
     public void abrirCardapio() {
+        // Garante que o pedido existe antes de adicionar itens
+        if (!garantirPedidoExiste()) {
+            return;
+        }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/VisualizacaoCardapio.fxml"));
             Parent root = loader.load();

@@ -94,7 +94,8 @@ public class PedidoController {
             cliente = clienteController.buscarClientePorTelefone(telefoneCliente);
         }
 
-        if (mesa.getStatus() != modelo.StatusMesa.LIVRE) {
+        // Permite criar pedido apenas para mesas LIVRES ou RESERVADAS
+        if (mesa.getStatus() != modelo.StatusMesa.LIVRE && mesa.getStatus() != modelo.StatusMesa.RESERVADA) {
             return null;
         }
 
@@ -103,6 +104,7 @@ public class PedidoController {
         novoPedido.setNumeroMesa(numeroMesa);
 
         repositorioPedido.cadastrar(novoPedido);
+        // Apenas muda para OCUPADA se estava LIVRE ou RESERVADA
         mesaController.alterarStatusMesa(numeroMesa, modelo.StatusMesa.OCUPADA);
 
         return novoPedido;
