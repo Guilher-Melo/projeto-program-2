@@ -1,7 +1,6 @@
 package negocio;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import controller.ClienteController;
@@ -10,7 +9,6 @@ import controller.ItemCardapioController;
 import controller.MesaController;
 import controller.PedidoController;
 import controller.ReservaController;
-import modelo.CategoriaItem;
 import modelo.Cliente;
 import modelo.Funcionario;
 import modelo.ItemCardapio;
@@ -20,8 +18,11 @@ import modelo.Pedido;
 import modelo.Relatorio;
 import modelo.Reserva;
 import modelo.StatusMesa;
+import repositorio.*;
 
 public class Fachada {
+
+    private static Fachada instancia;
 
     private ClienteController clienteController;
     private FuncionarioController funcionarioController;
@@ -31,29 +32,41 @@ public class Fachada {
     private ReservaController reservaController;
     private Relatorio relatorio;
 
-    public Fachada(ClienteController clienteController,
-                   FuncionarioController funcionarioController,
-                   ItemCardapioController itemCardapioController,
-                   MesaController mesaController,
-                   PedidoController pedidoController,
-                   ReservaController reservaController) {
-
-        this.clienteController = clienteController;
-        this.funcionarioController = funcionarioController;
-        this.itemCardapioController = itemCardapioController;
-        this.mesaController = mesaController;
-        this.pedidoController = pedidoController;
-        this.reservaController = reservaController;
+    private Fachada() {
+        inicializarControllers();
         this.relatorio = new Relatorio();
     }
 
+    public static Fachada getInstancia() {
+        if (instancia == null) {
+            instancia = new Fachada();
+        }
+        return instancia;
+    }
+
+    private void inicializarControllers() {
+        IRepositorioCliente repositorioCliente = new RepositorioClienteArray();
+        IRepositorioFuncionario repositorioFuncionario = new RepositorioFuncionarioArray();
+        IRepositorioItemCardapio repositorioItemCardapio = new RepositorioItemCardapioArray();
+        IRepositorioMesa repositorioMesa = new RepositorioMesaArray();
+        IRepositorioPedido repositorioPedido = new RepositorioPedidoArray();
+        IRepositorioReserva repositorioReserva = new RepositorioReservaArray();
+
+        // Criar controllers
+        this.clienteController = new ClienteController(repositorioCliente);
+        this.funcionarioController = new FuncionarioController(repositorioFuncionario);
+        this.itemCardapioController = new ItemCardapioController(repositorioItemCardapio);
+        this.mesaController = new MesaController(repositorioMesa);
+        this.pedidoController = new PedidoController(repositorioPedido);
+        this.reservaController = new ReservaController(repositorioReserva);
+    }
+
     // =======================================================
-    //                OPERAÇÕES DE FUNCIONÁRIO (Login)
+    // OPERAÇÕES DE FUNCIONÁRIO (Login)
     // =======================================================
 
-    public boolean cadastrarFuncionario(String nome, String cargo, String senha) {
-        Funcionario novo = new Funcionario(nome, cargo, senha);
-        return funcionarioController.cadastrarFuncionario(novo);
+    public boolean cadastrarFuncionario(Funcionario funcionario) {
+        return funcionarioController.cadastrarFuncionario(funcionario);
     }
 
     public Funcionario loginFuncionario(String nome, String senha) {
@@ -61,16 +74,15 @@ public class Fachada {
     }
 
     // =======================================================
-    //                  OPERAÇÕES DE CLIENTE
+    // OPERAÇÕES DE CLIENTE
     // =======================================================
 
-    public boolean cadastrarCliente(String nome, String telefone, String email) {
-        Cliente novoCliente = new Cliente(nome, telefone, email);
-        return clienteController.cadastrarCliente(novoCliente);
+    public boolean cadastrarCliente(Cliente cliente) {
+        return clienteController.cadastrarCliente(cliente);
     }
 
     public Cliente buscarClientePorTelefone(String telefone) {
-        return this.clienteController.buscarClientePorTelefone(telefone);
+        return clienteController.buscarClientePorTelefone(telefone);
     }
 
     public boolean atualizarCliente(Cliente cliente) {
@@ -86,12 +98,11 @@ public class Fachada {
     }
 
     // =======================================================
-    //                  OPERAÇÕES DE MESA
+    // OPERAÇÕES DE MESA
     // =======================================================
 
-    public boolean cadastrarMesa(int numero, int capacidade) {
-        Mesa novaMesa = new Mesa(numero, capacidade, StatusMesa.LIVRE);
-        return mesaController.cadastrarMesa(novaMesa);
+    public boolean cadastrarMesa(Mesa mesa) {
+        return mesaController.cadastrarMesa(mesa);
     }
 
     public Mesa buscarMesa(int numero) {
@@ -115,12 +126,11 @@ public class Fachada {
     }
 
     // =======================================================
-    //                  OPERAÇÕES DE CARDÁPIO
+    // OPERAÇÕES DE CARDÁPIO
     // =======================================================
 
-    public boolean cadastrarItemCardapio(String nome, String desc, double preco, CategoriaItem categoria) {
-        ItemCardapio novoItem = new ItemCardapio(nome, desc, preco, categoria);
-        return itemCardapioController.cadastrarItemCardapio(novoItem);
+    public boolean cadastrarItemCardapio(ItemCardapio item) {
+        return itemCardapioController.cadastrarItemCardapio(item);
     }
 
     public boolean atualizarItemCardapio(ItemCardapio item) {
@@ -136,7 +146,7 @@ public class Fachada {
     }
 
     // =======================================================
-    //                  OPERAÇÕES DE PEDIDO
+    // OPERAÇÕES DE PEDIDO
     // =======================================================
 
     public Pedido criarPedido(int numeroMesa, String telefoneCliente) {
@@ -157,37 +167,15 @@ public class Fachada {
     }
 
     // =======================================================
-    //                  OPERAÇÕES DE RESERVA
+    // OPERAÇÕES DE RESERVA
     // =======================================================
 
-    public boolean fazerReserva(String telefoneCliente, Mesa mesa, LocalDateTime dataHora, int numeroPessoas) {
-        Cliente cliente = clienteController.buscarClientePorTelefone(telefoneCliente);
-        if (cliente == null) {
-            return false;
-        }
-        Reserva novaReserva = new Reserva(dataHora, numeroPessoas, cliente, mesa);
-        
-        // Tenta realizar a reserva no controlador de reservas
-        boolean sucesso = reservaController.fazerReserva(novaReserva, mesa);
-        
-        // CORREÇÃO: Se reservou com sucesso, altera o status da mesa para RESERVADA
-        if (sucesso) {
-            mesaController.alterarStatusMesa(mesa.getNumero(), StatusMesa.RESERVADA);
-        }
-        
-        return sucesso;
+    public boolean fazerReserva(Reserva reserva, Mesa mesa) {
+        return reservaController.fazerReserva(reserva, mesa, mesaController);
     }
 
     public boolean cancelarReserva(Reserva reserva) {
-        // Tenta cancelar a reserva
-        boolean sucesso = reservaController.cancelarReserva(reserva);
-        
-        // CORREÇÃO: Se cancelou com sucesso, libera a mesa (status LIVRE)
-        if (sucesso && reserva.getMesa() != null) {
-            mesaController.alterarStatusMesa(reserva.getMesa().getNumero(), StatusMesa.LIVRE);
-        }
-        
-        return sucesso;
+        return reservaController.cancelarReserva(reserva, mesaController);
     }
 
     public List<Reserva> listarReservas() {
@@ -195,7 +183,7 @@ public class Fachada {
     }
 
     // =======================================================
-    //                      RELATÓRIOS
+    // RELATÓRIOS
     // =======================================================
 
     public String gerarRelatorioVendas(LocalDate inicio, LocalDate fim) {

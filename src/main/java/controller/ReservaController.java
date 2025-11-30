@@ -16,7 +16,7 @@ public class ReservaController {
         this.repositorioReserva = repositorioReserva;
     }
 
-    public boolean fazerReserva(Reserva reserva, Mesa mesa) {
+    public boolean fazerReserva(Reserva reserva, Mesa mesa, MesaController mesaController) {
         if (reserva == null) {
             throw new IllegalArgumentException("Reserva não pode ser nula");
         }
@@ -36,10 +36,16 @@ public class ReservaController {
         }
 
         repositorioReserva.cadastrar(reserva);
+
+        // Altera status da mesa para RESERVADA
+        if (mesaController != null) {
+            mesaController.alterarStatusMesa(mesa.getNumero(), StatusMesa.RESERVADA);
+        }
+
         return true;
     }
 
-    public boolean cancelarReserva(Reserva reserva) {
+    public boolean cancelarReserva(Reserva reserva, MesaController mesaController) {
         if (reserva == null) {
             throw new IllegalArgumentException("Reserva não pode ser nula");
         }
@@ -53,6 +59,12 @@ public class ReservaController {
         }
 
         repositorioReserva.remover(reserva);
+
+        // Libera a mesa (status LIVRE)
+        if (mesaController != null && reserva.getMesa() != null) {
+            mesaController.alterarStatusMesa(reserva.getMesa().getNumero(), StatusMesa.LIVRE);
+        }
+
         return true;
     }
 

@@ -1,47 +1,22 @@
 import java.time.LocalDate;
 import modelo.*;
 import negocio.Fachada;
-import repositorio.*;
-import controller.*;
 
 public class Main {
     public static void main(String[] args) {
 
-        // --- 1. Configuração da Fachada com Controllers ---
-
-        IRepositorioCliente repoCliente = new RepositorioClienteArray();
-        IRepositorioReserva repoReserva = new RepositorioReservaArray();
-        IRepositorioMesa repoMesa = new RepositorioMesaArray();
-        IRepositorioPedido repoPedido = new RepositorioPedidoArray();
-        IRepositorioItemCardapio repoItem = new RepositorioItemCardapioArray();
-        IRepositorioFuncionario repoFunc = new RepositorioFuncionarioArray();
-
-        ClienteController clienteController = new ClienteController(repoCliente);
-        FuncionarioController funcionarioController = new FuncionarioController(repoFunc);
-        ItemCardapioController itemCardapioController = new ItemCardapioController(repoItem);
-        MesaController mesaController = new MesaController(repoMesa);
-        PedidoController pedidoController = new PedidoController(repoPedido);
-        ReservaController reservaController = new ReservaController(repoReserva);
-
-        // Instancia a fachada com os controllers
-        Fachada fachada = new Fachada(
-                clienteController,
-                funcionarioController,
-                itemCardapioController,
-                mesaController,
-                pedidoController,
-                reservaController);
+        Fachada fachada = Fachada.getInstancia();
 
         System.out.println("--- Sistema de Restaurante Iniciado ---");
         System.out.println("\n--- Teste do Pacote 2: Clientes e Reservas (Existente) ---");
 
-        if (fachada.cadastrarCliente("Guilherme Melo", "98888-0001", "gui@email.com")) {
+        if (fachada.cadastrarCliente(new Cliente("Guilherme Melo", "98888-0001", "gui@email.com"))) {
             System.out.println("Cliente Guilherme Melo cadastrado com sucesso.");
         } else {
             System.err.println("Erro (REQ01): Já existe um cliente com o telefone 98888-0001");
         }
 
-        if (fachada.cadastrarCliente("Maria Silva", "97777-0002", "maria@email.com")) {
+        if (fachada.cadastrarCliente(new Cliente("Maria Silva", "97777-0002", "maria@email.com"))) {
             System.out.println("Cliente Maria Silva cadastrado com sucesso.");
         } else {
             System.err.println("Erro (REQ01): Já existe um cliente com o telefone 97777-0002");
@@ -51,26 +26,29 @@ public class Main {
         System.out.println("\n--- Teste do Pacote 1: Cadastros Iniciais ---");
 
         // Cadastrando mesas
-        if (fachada.cadastrarMesa(1, 4)) {
+        if (fachada.cadastrarMesa(new Mesa(1, 4, StatusMesa.LIVRE))) {
             System.out.println("Mesa 1 cadastrada.");
         } else {
             System.err.println("Erro: Já existe uma mesa com o número 1");
         }
 
-        if (fachada.cadastrarMesa(2, 2)) {
+        if (fachada.cadastrarMesa(new Mesa(2, 2, StatusMesa.LIVRE))) {
             System.out.println("Mesa 2 cadastrada.");
         } else {
             System.err.println("Erro: Já existe uma mesa com o número 2");
         }
 
         // Cadastrando itens no cardápio
-        if (fachada.cadastrarItemCardapio("Coca-Cola Lata", "Refrigerante", 6.00, CategoriaItem.BEBIDA)) {
+        if (fachada.cadastrarItemCardapio(
+                new ItemCardapio("Coca-Cola Lata", "Refrigerante", 6.00, CategoriaItem.BEBIDA))) {
             System.out.println("Item 'Coca-Cola Lata' cadastrado no cardápio.");
         }
-        if (fachada.cadastrarItemCardapio("X-Burger", "Pão, carne, queijo", 22.00, CategoriaItem.LANCHE)) {
+        if (fachada.cadastrarItemCardapio(
+                new ItemCardapio("X-Burger", "Pão, carne, queijo", 22.00, CategoriaItem.LANCHE))) {
             System.out.println("Item 'X-Burger' cadastrado no cardápio.");
         }
-        if (fachada.cadastrarItemCardapio("Batata Frita", "Porção média", 15.00, CategoriaItem.ENTRADA)) {
+        if (fachada.cadastrarItemCardapio(
+                new ItemCardapio("Batata Frita", "Porção média", 15.00, CategoriaItem.ENTRADA))) {
             System.out.println("Item 'Batata Frita' cadastrado no cardápio.");
         }
 
@@ -98,20 +76,10 @@ public class Main {
                 System.out.println("1x Batata Frita adicionado(s) ao pedido " + idPedido);
             }
 
-            // 3.3. Teste de item indisponível (deve falhar)
-            System.out.println("\nTestando item indisponível...");
-            ItemCardapio itemBebida = repoItem.buscarPorNome("Coca-Cola Lata");
-            itemBebida.atualizarDisponibilidade(false);
-            if (!fachada.adicionarItemPedido(idPedido, "Coca-Cola Lata", 1)) {
-                System.err.println("Erro: Item 'Coca-Cola Lata' não está disponível.");
-            }
-
-            // 3.4. Registrando o pagamento
+            // 3.3. Registrando o pagamento
             System.out.println("\nRegistrando pagamento do pedido " + idPedido + "...");
             if (fachada.registrarPagamento(idPedido, MetodoPagamento.CARTAO_DEBITO)) {
-                Pedido pedidoAtualizado = pedidoController.buscarPedidoPorId(idPedido);
-                System.out.println("Pagamento de R$ " + pedidoAtualizado.getValorTotal() + " para o pedido " + idPedido
-                        + " registrado.");
+                System.out.println("Pagamento registrado com sucesso para o pedido " + idPedido);
             }
 
             // 3.5. Teste de pagamento duplicado (deve falhar)

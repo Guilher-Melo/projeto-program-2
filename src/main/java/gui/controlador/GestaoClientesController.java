@@ -110,10 +110,10 @@ public class GestaoClientesController implements IControlador {
             List<Cliente> clientes = fachada.listarClientes();
             listaClientes = FXCollections.observableArrayList(clientes);
             tabelaClientes.setItems(listaClientes);
-            
+
             // Adicione esta linha para garantir:
-            tabelaClientes.refresh(); 
-            
+            tabelaClientes.refresh();
+
         } catch (Exception e) {
             mostrarErro("Erro ao carregar clientes", e.getMessage());
         }
@@ -132,7 +132,7 @@ public class GestaoClientesController implements IControlador {
             String email = txtEmail.getText().trim();
 
             // Chamar fachada para cadastrar
-            boolean sucesso = fachada.cadastrarCliente(nome, telefone, email);
+            boolean sucesso = fachada.cadastrarCliente(new modelo.Cliente(nome, telefone, email));
 
             if (sucesso) {
                 mostrarSucesso("Cliente cadastrado com sucesso!");
@@ -171,12 +171,12 @@ public class GestaoClientesController implements IControlador {
 
             if (sucesso) {
                 mostrarSucesso("Cliente atualizado com sucesso!");
-                
+
                 // --- A CORREÇÃO ESTÁ AQUI ---
-                carregarClientes();       // Recarrega a lista do repositório
+                carregarClientes(); // Recarrega a lista do repositório
                 tabelaClientes.refresh(); // FORÇA a tabela a redesenhar os dados visuais
                 // ----------------------------
-                
+
                 limparFormulario();
             } else {
                 mostrarErro("Erro ao atualizar", "Cliente não encontrado no sistema.");

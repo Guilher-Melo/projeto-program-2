@@ -4,6 +4,11 @@ import modelo.Pedido;
 import modelo.ItemPedido;
 import modelo.StatusPedido;
 import modelo.StatusMesa;
+import modelo.Mesa;
+import modelo.Cliente;
+import modelo.ItemCardapio;
+import modelo.MetodoPagamento;
+import modelo.Pagamento;
 import repositorio.IRepositorioPedido;
 import java.util.List;
 
@@ -84,28 +89,28 @@ public class PedidoController {
     public Pedido criarPedido(int numeroMesa, String telefoneCliente,
             MesaController mesaController,
             ClienteController clienteController) {
-        modelo.Mesa mesa = mesaController.buscarMesaPorNumero(numeroMesa);
+        Mesa mesa = mesaController.buscarMesaPorNumero(numeroMesa);
         if (mesa == null) {
             return null;
         }
 
-        modelo.Cliente cliente = null;
+        Cliente cliente = null;
         if (telefoneCliente != null && !telefoneCliente.isEmpty()) {
             cliente = clienteController.buscarClientePorTelefone(telefoneCliente);
         }
 
         // Permite criar pedido apenas para mesas LIVRES ou RESERVADAS
-        if (mesa.getStatus() != modelo.StatusMesa.LIVRE && mesa.getStatus() != modelo.StatusMesa.RESERVADA) {
+        if (mesa.getStatus() != StatusMesa.LIVRE && mesa.getStatus() != StatusMesa.RESERVADA) {
             return null;
         }
 
-        modelo.Pedido novoPedido = new modelo.Pedido(java.time.LocalDateTime.now(), cliente);
+        Pedido novoPedido = new Pedido(java.time.LocalDateTime.now(), cliente);
 
         novoPedido.setNumeroMesa(numeroMesa);
 
         repositorioPedido.cadastrar(novoPedido);
         // Apenas muda para OCUPADA se estava LIVRE ou RESERVADA
-        mesaController.alterarStatusMesa(numeroMesa, modelo.StatusMesa.OCUPADA);
+        mesaController.alterarStatusMesa(numeroMesa, StatusMesa.OCUPADA);
 
         return novoPedido;
     }
@@ -117,7 +122,7 @@ public class PedidoController {
             return false;
         }
 
-        modelo.ItemCardapio itemCardapio = itemCardapioController.buscarItemPorNome(nomeItem);
+        ItemCardapio itemCardapio = itemCardapioController.buscarItemPorNome(nomeItem);
         if (itemCardapio == null) {
             return false;
         }
@@ -126,14 +131,14 @@ public class PedidoController {
             return false;
         }
 
-        modelo.ItemPedido novoItemPedido = new modelo.ItemPedido(quantidade, "", itemCardapio);
+        ItemPedido novoItemPedido = new ItemPedido(quantidade, "", itemCardapio);
         pedido.adicionarItem(novoItemPedido);
         pedido.calcularTotal();
         repositorioPedido.atualizar(pedido);
         return true;
     }
 
-    public boolean registrarPagamento(int idPedido, modelo.MetodoPagamento metodo, MesaController mesaController) {
+    public boolean registrarPagamento(int idPedido, MetodoPagamento metodo, MesaController mesaController) {
         Pedido pedido = repositorioPedido.buscarPorId(idPedido);
         if (pedido == null) {
             return false;
@@ -144,7 +149,7 @@ public class PedidoController {
         }
 
         double total = pedido.fecharConta();
-        modelo.Pagamento pagamento = new modelo.Pagamento(total, metodo);
+        Pagamento pagamento = new Pagamento(total, metodo);
         pagamento.processarPagamento();
 
         pedido.setPagamento(pagamento);

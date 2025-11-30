@@ -27,18 +27,29 @@ import negocio.Fachada;
 
 public class ReservasController implements IControlador {
 
-    @FXML private ComboBox<Cliente> comboCliente;
-    @FXML private ComboBox<Mesa> comboMesa;
-    @FXML private DatePicker dtData;
-    @FXML private TextField txtHora;
-    @FXML private TextField txtPessoas;
+    @FXML
+    private ComboBox<Cliente> comboCliente;
+    @FXML
+    private ComboBox<Mesa> comboMesa;
+    @FXML
+    private DatePicker dtData;
+    @FXML
+    private TextField txtHora;
+    @FXML
+    private TextField txtPessoas;
 
-    @FXML private TableView<Reserva> tabelaReservas;
-    @FXML private TableColumn<Reserva, String> colDataHora;
-    @FXML private TableColumn<Reserva, String> colCliente;
-    @FXML private TableColumn<Reserva, String> colMesa;
-    @FXML private TableColumn<Reserva, String> colPessoas;
-    @FXML private TableColumn<Reserva, Void> colAcoes;
+    @FXML
+    private TableView<Reserva> tabelaReservas;
+    @FXML
+    private TableColumn<Reserva, String> colDataHora;
+    @FXML
+    private TableColumn<Reserva, String> colCliente;
+    @FXML
+    private TableColumn<Reserva, String> colMesa;
+    @FXML
+    private TableColumn<Reserva, String> colPessoas;
+    @FXML
+    private TableColumn<Reserva, Void> colAcoes;
 
     private Fachada fachada;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -62,8 +73,11 @@ public class ReservasController implements IControlador {
             public String toString(Cliente c) {
                 return (c == null) ? "" : c.getNome() + " (" + c.getTelefone() + ")";
             }
+
             @Override
-            public Cliente fromString(String string) { return null; }
+            public Cliente fromString(String string) {
+                return null;
+            }
         });
 
         // Configura como a Mesa aparece no ComboBox
@@ -72,28 +86,25 @@ public class ReservasController implements IControlador {
             public String toString(Mesa m) {
                 return (m == null) ? "" : "Mesa " + m.getNumero() + " (" + m.getCapacidade() + " lug.)";
             }
+
             @Override
-            public Mesa fromString(String string) { return null; }
+            public Mesa fromString(String string) {
+                return null;
+            }
         });
     }
 
     private void configurarTabela() {
         // Formata a data para exibir bonito na tabela
-        colDataHora.setCellValueFactory(cell -> 
-            new SimpleStringProperty(cell.getValue().getDataHora().format(formatter))
-        );
+        colDataHora
+                .setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getDataHora().format(formatter)));
 
-        colCliente.setCellValueFactory(cell -> 
-            new SimpleStringProperty(cell.getValue().getCliente().getNome())
-        );
+        colCliente.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCliente().getNome()));
 
-        colMesa.setCellValueFactory(cell -> 
-            new SimpleStringProperty("Mesa " + cell.getValue().getMesa().getNumero())
-        );
+        colMesa.setCellValueFactory(cell -> new SimpleStringProperty("Mesa " + cell.getValue().getMesa().getNumero()));
 
-        colPessoas.setCellValueFactory(cell -> 
-            new SimpleStringProperty(String.valueOf(cell.getValue().getNumeroPessoas()))
-        );
+        colPessoas.setCellValueFactory(
+                cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getNumeroPessoas())));
 
         // Botão Cancelar
         colAcoes.setCellFactory(param -> new TableCell<>() {
@@ -116,7 +127,7 @@ public class ReservasController implements IControlador {
         // Carrega Clientes e Mesas para os ComboBoxes
         comboCliente.setItems(FXCollections.observableArrayList(fachada.listarClientes()));
         comboMesa.setItems(FXCollections.observableArrayList(fachada.listarMesas()));
-        
+
         carregarReservas();
     }
 
@@ -147,15 +158,15 @@ public class ReservasController implements IControlador {
             LocalDateTime dataHora = LocalDateTime.of(data, horario);
             int numPessoas = Integer.parseInt(pessoasStr);
 
-            // Validar capacidade da mesa visualmente antes de mandar pro backend
             if (numPessoas > mesa.getCapacidade()) {
-                mostrarAlerta("Capacidade Excedida", "A mesa " + mesa.getNumero() + 
+                mostrarAlerta("Capacidade Excedida", "A mesa " + mesa.getNumero() +
                         " só comporta " + mesa.getCapacidade() + " pessoas.");
                 return;
             }
 
-            // A Fachada pede: telefoneCliente, Mesa, DataHora, NumPessoas
-            boolean sucesso = fachada.fazerReserva(cliente.getTelefone(), mesa, dataHora, numPessoas);
+            // Cria objeto Reserva e passa para a Fachada
+            modelo.Reserva novaReserva = new modelo.Reserva(dataHora, numPessoas, cliente, mesa);
+            boolean sucesso = fachada.fazerReserva(novaReserva, mesa);
 
             if (sucesso) {
                 mostrarAlerta("Sucesso", "Reserva realizada com sucesso!");
@@ -176,7 +187,7 @@ public class ReservasController implements IControlador {
 
     private void cancelarReserva(Reserva reserva) {
         boolean sucesso = fachada.cancelarReserva(reserva);
-        
+
         if (sucesso) {
             mostrarAlerta("Sucesso", "Reserva cancelada.");
             carregarReservas();

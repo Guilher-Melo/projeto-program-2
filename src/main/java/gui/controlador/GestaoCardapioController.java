@@ -24,19 +24,31 @@ import negocio.Fachada;
 
 public class GestaoCardapioController implements IControlador {
 
-    @FXML private TextField txtNome;
-    @FXML private TextField txtDescricao;
-    @FXML private TextField txtPreco;
-    @FXML private ComboBox<CategoriaItem> comboCategoria;
-    @FXML private CheckBox chkDisponivel;
-    @FXML private Button btnSalvar;
+    @FXML
+    private TextField txtNome;
+    @FXML
+    private TextField txtDescricao;
+    @FXML
+    private TextField txtPreco;
+    @FXML
+    private ComboBox<CategoriaItem> comboCategoria;
+    @FXML
+    private CheckBox chkDisponivel;
+    @FXML
+    private Button btnSalvar;
 
-    @FXML private TableView<ItemCardapio> tabelaItens;
-    @FXML private TableColumn<ItemCardapio, String> colNome;
-    @FXML private TableColumn<ItemCardapio, String> colCategoria;
-    @FXML private TableColumn<ItemCardapio, String> colPreco;
-    @FXML private TableColumn<ItemCardapio, String> colDisponivel;
-    @FXML private TableColumn<ItemCardapio, Void> colAcoes;
+    @FXML
+    private TableView<ItemCardapio> tabelaItens;
+    @FXML
+    private TableColumn<ItemCardapio, String> colNome;
+    @FXML
+    private TableColumn<ItemCardapio, String> colCategoria;
+    @FXML
+    private TableColumn<ItemCardapio, String> colPreco;
+    @FXML
+    private TableColumn<ItemCardapio, String> colDisponivel;
+    @FXML
+    private TableColumn<ItemCardapio, Void> colAcoes;
 
     private Fachada fachada;
     private ItemCardapio itemSelecionado;
@@ -57,12 +69,14 @@ public class GestaoCardapioController implements IControlador {
 
     private void configurarColunas() {
         colNome.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getNome()));
-        
+
         colCategoria.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCategoria().getNome()));
-        
-        colPreco.setCellValueFactory(cell -> new SimpleStringProperty(String.format("R$ %.2f", cell.getValue().getPreco())));
-        
-        colDisponivel.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().isDisponivel() ? "Sim" : "Não"));
+
+        colPreco.setCellValueFactory(
+                cell -> new SimpleStringProperty(String.format("R$ %.2f", cell.getValue().getPreco())));
+
+        colDisponivel
+                .setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().isDisponivel() ? "Sim" : "Não"));
 
         // Coluna de Ações (Editar, Remover, Alternar Disp)
         colAcoes.setCellFactory(param -> new TableCell<>() {
@@ -116,13 +130,14 @@ public class GestaoCardapioController implements IControlador {
 
             // OBS: O método da fachada original pede apenas (nome, desc, preco, cat).
             // A disponibilidade padrão é true.
-            boolean sucesso = fachada.cadastrarItemCardapio(nome, desc, preco, cat);
+            boolean sucesso = fachada.cadastrarItemCardapio(new modelo.ItemCardapio(nome, desc, preco, cat));
 
             if (sucesso) {
                 // Se precisar ajustar a disponibilidade logo após criar:
                 ItemCardapio item = fachada.listarItensCardapio().stream()
                         .filter(i -> i.getNome().equals(nome)).findFirst().orElse(null);
-                if (item != null && !disponivel) item.atualizarDisponibilidade(false);
+                if (item != null && !disponivel)
+                    item.atualizarDisponibilidade(false);
 
                 mostrarAlerta("Sucesso", "Item cadastrado!");
                 limparFormulario();
@@ -140,7 +155,8 @@ public class GestaoCardapioController implements IControlador {
 
     @FXML
     public void atualizarItem() {
-        if (itemSelecionado == null) return;
+        if (itemSelecionado == null)
+            return;
 
         try {
             itemSelecionado.setDescricao(txtDescricao.getText());
@@ -150,7 +166,7 @@ public class GestaoCardapioController implements IControlador {
             // Nome não mudamos pois é a chave no seu sistema atual
 
             boolean sucesso = fachada.atualizarItemCardapio(itemSelecionado);
-            
+
             if (sucesso) {
                 mostrarAlerta("Sucesso", "Item atualizado!");
                 limparFormulario();

@@ -12,9 +12,9 @@ public class GerenciadorTelas {
 
     private static GerenciadorTelas instancia;
     private Stage stagePrincipal;
-    private Fachada fachada;
 
-    private GerenciadorTelas() {}
+    private GerenciadorTelas() {
+    }
 
     public static GerenciadorTelas getInstance() {
         if (instancia == null) {
@@ -23,9 +23,8 @@ public class GerenciadorTelas {
         return instancia;
     }
 
-    public void inicializar(Stage stage, Fachada fachada) {
+    public void inicializar(Stage stage) {
         this.stagePrincipal = stage;
-        this.fachada = fachada;
     }
 
     public void trocarTela(String caminhoFxml, String titulo) {
@@ -35,7 +34,8 @@ public class GerenciadorTelas {
 
             Object controlador = loader.getController();
             if (controlador instanceof gui.controlador.IControlador) {
-                ((gui.controlador.IControlador) controlador).setFachada(this.fachada);
+                // Usa Singleton da Fachada
+                ((gui.controlador.IControlador) controlador).setFachada(Fachada.getInstancia());
             }
 
             Scene scene = new Scene(root);
@@ -49,7 +49,6 @@ public class GerenciadorTelas {
         }
     }
 
-
     public void abrirTelaPedido(int idMesa) {
         try {
             // Carrega o FXML do Pedido
@@ -58,11 +57,11 @@ public class GerenciadorTelas {
 
             // Pega o controlador específico da TelaPedido
             gui.controlador.TelaPedidoController controller = loader.getController();
-            
-            // Passa a fachada (padrão)
-            controller.setFachada(this.fachada);
-            
-            // Passa o ID da mesa (Novo!)
+
+            // Passa a fachada (Singleton)
+            controller.setFachada(Fachada.getInstancia());
+
+            // Passa o ID da mesa
             controller.setMesa(idMesa);
 
             // Troca a cena
@@ -76,9 +75,8 @@ public class GerenciadorTelas {
             System.err.println("Erro ao abrir Tela de Pedido para a mesa " + idMesa);
         }
     }
-    // -------------------------------------
 
     public Fachada getFachada() {
-        return fachada;
+        return Fachada.getInstancia();
     }
 }
