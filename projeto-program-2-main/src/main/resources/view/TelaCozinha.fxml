@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="TOP_CENTER" spacing="20"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="gui.controlador.TelaCozinhaController"
+      style="-fx-background-color: #fff3e0;"> <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Monitor de Cozinha" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;" />
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Pedidos Pendentes e Em Preparo:" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Atualizar Lista" onAction="#atualizarLista" style="-fx-base: #2196F3;"/>
+    </HBox>
+
+    <TableView fx:id="tabelaPedidos" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colunaId" text="#" prefWidth="50" />
+            <TableColumn fx:id="colunaMesa" text="Mesa" prefWidth="80" />
+            <TableColumn fx:id="colunaItens" text="Itens do Pedido" prefWidth="400" />
+            <TableColumn fx:id="colunaStatus" text="Status" prefWidth="150" />
+        </columns>
+    </TableView>
+
+    <HBox spacing="15" alignment="CENTER">
+        <Button text="Marcar como EM PREPARO" onAction="#avancarParaPreparo" style="-fx-base: #FF9800; -fx-text-fill: white;"/>
+        <Button text="Marcar como PRONTO" onAction="#avancarParaPronto" style="-fx-base: #4CAF50; -fx-text-fill: white;"/>
+    </HBox>
+
+</VBox>

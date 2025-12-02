@@ -1,0 +1,106 @@
+# .gitignore gerado para projetos Java (padrão)
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+logs/
+log/
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Archives and compressed files
+*.zip
+*.tar.gz
+*.rar
+
+# Build directories
+/target/
+/build/
+/out/
+/dist/
+
+# Maven
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.jar.orig
+
+# Gradle
+/.gradle
+.gradle/
+/gradle-app.setting
+
+# Eclipse
+.classpath
+.project
+.settings/
+.buildpath
+.recommenders/
+
+# IntelliJ IDEA
+*.iml
+.idea/
+.idea_modules/
+workspace.xml
+tasks.xml
+usage.statistics.xml
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+.nb-gradle/
+
+# VS Code
+.vscode/
+
+# Test reports / coverage
+/surefire-reports/
+/failsafe-reports/
+test-output/
+coverage/
+jacoco.exec
+
+# Generated sources
+/generated-sources/
+/target/generated-sources/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Local configuration / secrets / environment
+local.properties
+.env
+.env.local
+secrets.properties
+
+# Others
+*.class
+*.log
+*.tmp
+*.swp
+*.pid
+*.seed
+*.backup
+rebel.xml
+
+# Ignore IDE run configs and workspace files
+*.ipr
+*.iws
+
+# Binary / vendor artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Optional: lock files
+dependency-reduced-pom.xml
+
+# End

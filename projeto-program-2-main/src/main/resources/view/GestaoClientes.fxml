@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="gui.controlador.GestaoClientesController"
+            style="-fx-background-color: #f5f5f5;">
+    
+    <!-- Cabeçalho -->
+    <top>
+        <VBox style="-fx-background-color: #2196F3; -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Gestão de Clientes" style="-fx-text-fill: white; -fx-font-weight: bold;">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="← Voltar" onAction="#voltarParaTelaPrincipal" 
+                        style="-fx-background-color: white; -fx-text-fill: #2196F3;"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Conteúdo Principal -->
+    <center>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <!-- Formulário de Cadastro/Edição -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #ddd; -fx-border-width: 1;">
+                <Label text="Cadastro de Cliente" style="-fx-font-weight: bold;">
+                    <font>
+                        <Font name="System Bold" size="16"/>
+                    </font>
+                </Label>
+                
+                <GridPane hgap="15" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100" prefWidth="120"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+                    
+                    <!-- Nome -->
+                    <Label text="Nome:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="txtNome" promptText="Digite o nome completo" 
+                              GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    
+                    <!-- Telefone -->
+                    <Label text="Telefone:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="txtTelefone" promptText="(00) 00000-0000" 
+                              GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    
+                    <!-- Email -->
+                    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <TextField fx:id="txtEmail" promptText="email@exemplo.com" 
+                              GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </GridPane>
+                
+                <!-- Botões de Ação do Formulário -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+                    <Button text="Cadastrar" onAction="#cadastrarCliente" 
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    <Button text="Atualizar" onAction="#atualizarCliente" fx:id="btnAtualizar" disable="true"
+                            style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    <Button text="Limpar" onAction="#limparFormulario"
+                            style="-fx-background-color: #9E9E9E; -fx-text-fill: white;"/>
+                </HBox>
+            </VBox>
+            
+            <!-- Lista de Clientes -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #ddd; -fx-border-width: 1;" VBox.vgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Clientes Cadastrados" style="-fx-font-weight: bold;">
+                        <font>
+                            <Font name="System Bold" size="16"/>
+                        </font>
+                    </Label>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="🔄 Atualizar" onAction="#carregarClientes"
+                            style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                </HBox>
+                
+                <TableView fx:id="tabelaClientes" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colNome" text="Nome" prefWidth="200"/>
+                        <TableColumn fx:id="colTelefone" text="Telefone" prefWidth="150"/>
+                        <TableColumn fx:id="colEmail" text="Email" prefWidth="200"/>
+                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="150"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Nenhum cliente cadastrado"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
