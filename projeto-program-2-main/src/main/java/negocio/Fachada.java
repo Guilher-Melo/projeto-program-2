@@ -59,14 +59,15 @@ public class Fachada {
         this.itemCardapioController = new ItemCardapioController(repositorioItemCardapio);
         this.mesaController = new MesaController(repositorioMesa);
         this.reservaController = new ReservaController(repositorioReserva);
-
+        
         // 3. Inicializa PedidoController COM as dependências injetadas
         // (Isso garante que ele possa acessar Mesa, Cliente e Cardápio internamente)
         this.pedidoController = new PedidoController(
-                repositorioPedido,
-                this.mesaController,
-                this.clienteController,
-                this.itemCardapioController);
+            repositorioPedido, 
+            this.mesaController, 
+            this.clienteController, 
+            this.itemCardapioController
+        );
     }
 
     // =======================================================
@@ -174,10 +175,6 @@ public class Fachada {
 
     public List<Pedido> listarPedidos() {
         return pedidoController.listarTodosPedidos();
-    }
-
-    public boolean atualizarStatusPedido(int idPedido, modelo.StatusPedido novoStatus) {
-        return pedidoController.atualizarStatusPedido(idPedido, novoStatus);
     }
 
     // =======================================================

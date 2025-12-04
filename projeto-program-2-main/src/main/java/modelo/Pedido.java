@@ -1,5 +1,5 @@
 package modelo;
-
+import gui.DialogoPagamento;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +100,15 @@ public class Pedido {
     }
 
     public double fecharConta() {
+        // --- CÓDIGO NOVO: Abre a janela e PAUSA o código até você pagar ---
+        try {
+            DialogoPagamento tela = new DialogoPagamento(this);
+            tela.showAndWait(); // O 'Wait' faz o Java esperar você fechar a janela
+        } catch (Exception e) {
+            System.err.println("Erro ao abrir tela de pagamento: " + e.getMessage());
+        }
+        // ------------------------------------------------------------------
+
         System.out.println("Fechando a conta do pedido...");
         return calcularTotal();
     }
