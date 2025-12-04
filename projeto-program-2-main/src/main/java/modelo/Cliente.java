@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.List;
+
 public class Cliente {
 
     private String nome;
@@ -36,8 +38,10 @@ public class Cliente {
         this.email = email;
     }
 
-    public double consultarHistorico() {
-        // Lógica pra consultar o histórico de pedidos do cliente
-        return 0.0;
-    }
+    public double consultarHistorico(List<Pedido> todosPedidos) {
+    return todosPedidos.stream()
+        .filter(p -> p.getCliente() != null && p.getCliente().getTelefone().equals(this.telefone))
+        .mapToDouble(Pedido::getValorTotal)
+        .sum();
+}
 }

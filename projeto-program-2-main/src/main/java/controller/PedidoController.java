@@ -1,16 +1,17 @@
 package controller;
 
-import modelo.Pedido;
-import modelo.ItemPedido;
-import modelo.StatusPedido;
-import modelo.StatusMesa;
-import modelo.Mesa;
+import java.util.List;
+
 import modelo.Cliente;
 import modelo.ItemCardapio;
+import modelo.ItemPedido;
+import modelo.Mesa;
 import modelo.MetodoPagamento;
 import modelo.Pagamento;
+import modelo.Pedido;
+import modelo.StatusMesa;
+import modelo.StatusPedido;
 import repositorio.IRepositorioPedido;
-import java.util.List;
 
 public class PedidoController {
 
@@ -122,6 +123,11 @@ public class PedidoController {
     // Registra pagamento e LIBERA A MESA
     public boolean registrarPagamento(int idPedido, MetodoPagamento metodo) {
         Pedido pedido = repositorioPedido.buscarPorId(idPedido);
+        
+        if (pedido.getStatus() != StatusPedido.ENTREGUE && pedido.getStatus() != StatusPedido.PRONTO) {
+            // Retorne false ou lance exceção avisando que o pedido ainda não foi entregue
+            return false; 
+        }       
         
         if (pedido == null) return false;
         if (pedido.getPagamento() != null) return false; // Já está pago
