@@ -35,6 +35,12 @@ public class TelaPedidoController implements IControlador {
     private Label lblNomeCliente;
     @FXML
     private Label lblValorTotal;
+    @FXML
+    private Label lblStatusPedido;
+    @FXML
+    private javafx.scene.control.Button btnConfirmarPedido;
+    @FXML
+    private javafx.scene.control.Button btnCancelarPedido;
 
     @FXML
     private TableView<ItemPedido> tabelaItens;
@@ -126,6 +132,9 @@ public class TelaPedidoController implements IControlador {
             // Atualiza Total
             pedidoAtual.calcularTotal(); // Garante cálculo
             lblValorTotal.setText(String.format("R$ %.2f", pedidoAtual.getValorTotal()));
+
+            // Atualiza Status
+            atualizarStatusVisual();
         }
     }
 
@@ -235,5 +244,146 @@ public class TelaPedidoController implements IControlador {
     @FXML
     public void voltar() {
         GerenciadorTelas.getInstance().trocarTela("/view/GestaoMesas.fxml", "Gestão de Mesas");
+    }
+
+    private void atualizarStatusVisual() {
+        if (pedidoAtual == null)
+            return;
+
+        modelo.StatusPedido status = pedidoAtual.getStatus();
+        lblStatusPedido.setText("Status: " + status.getNome());
+
+        // Muda a cor do label baseado no status
+        String cor = "#9E9E9E"; // Cinza padrão
+        switch (status) {
+            case PENDENTE:
+                cor = "#FF9800"; // Laranja
+                break;
+            case CONFIRMADO:
+                cor = "#2196F3"; // Azul
+                break;
+            case EM_PREPARO:
+                cor = "#FFC107"; // Amarelo
+                break;
+            case PRONTO:
+                cor = "#8BC34A"; // Verde claro
+                break;
+            case ENTREGUE:
+                cor = "#4CAF50"; // Verde
+                break;
+            case CANCELADO:
+                cor = "#F44336"; // Vermelho
+                break;
+        }
+        lblStatusPedido.setStyle(
+                "-fx-background-color: " + cor + "; -fx-padding: 8; -fx-background-radius: 5; -fx-font-weight: bold;");
+
+        // Controla visibilidade dos botões baseado no status
+        boolean podeConfirmar = (status == modelo.StatusPedido.PENDENTE);
+        boolean podeCancelar = (status != modelo.StatusPedido.ENTREGUE && status != modelo.StatusPedido.CANCELADO);
+
+        btnConfirmarPedido.setVisible(podeConfirmar);
+        btnConfirmarPedido.setManaged(podeConfirmar);
+        btnCancelarPedido.setVisible(podeCancelar);
+        btnCancelarPedido.setManaged(podeCancelar);
+    }
+
+    @FXML
+    public void confirmarPedido() {
+        if (pedidoAtual == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Atenção");
+            alert.setHeaderText("Nenhum Pedido");
+            alert.setContentText("Não há pedido para confirmar.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (pedidoAtual.getItens().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Atenção");
+            alert.setHeaderText("Pedido Vazio");
+            alert.setContentText("Adicione itens antes de confirmar o pedido.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (pedidoAtual.getStatus() != modelo.StatusPedido.PENDENTE) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Atenção");
+            alert.setHeaderText("Pedido já Confirmado");
+            alert.setContentText("Este pedido já foi confirmado anteriormente.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (fachada.atualizarStatusPedido(pedidoAtual.getId(), modelo.StatusPedido.CONFIRMADO)) {
+            pedidoAtual.setStatus(modelo.StatusPedido.CONFIRMADO);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Sucesso");
+            alert.setHeaderText("Pedido Confirmado");
+            alert.setContentText("O pedido foi confirmado e enviado para a cozinha.");
+            alert.showAndWait();
+            atualizarTela();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Erro ao Confirmar");
+            alert.setContentText("Não foi possível confirmar o pedido.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    public void cancelarPedido() {
+        if (pedidoAtual == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Atenção");
+            alert.setHeaderText("Nenhum Pedido");
+            alert.setContentText("Não há pedido para cancelar.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (pedidoAtual.getStatus() == modelo.StatusPedido.ENTREGUE) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Atenção");
+            alert.setHeaderText("Pedido Finalizado");
+            alert.setContentText("Não é possível cancelar um pedido já entregue.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (pedidoAtual.getStatus() == modelo.StatusPedido.CANCELADO) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Atenção");
+            alert.setHeaderText("Pedido já Cancelado");
+            alert.setContentText("Este pedido já foi cancelado anteriormente.");
+            alert.showAndWait();
+            return;
+        }
+
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Confirmar Cancelamento");
+        confirmacao.setHeaderText("Cancelar Pedido");
+        confirmacao.setContentText("Tem certeza que deseja cancelar este pedido?\nEsta ação não pode ser desfeita.");
+
+        if (confirmacao.showAndWait().get() == javafx.scene.control.ButtonType.OK) {
+            if (fachada.atualizarStatusPedido(pedidoAtual.getId(), modelo.StatusPedido.CANCELADO)) {
+                pedidoAtual.setStatus(modelo.StatusPedido.CANCELADO);
+                Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                sucesso.setTitle("Pedido Cancelado");
+                sucesso.setHeaderText("Sucesso");
+                sucesso.setContentText("O pedido foi cancelado com sucesso.");
+                sucesso.showAndWait();
+                atualizarTela();
+            } else {
+                Alert erro = new Alert(Alert.AlertType.ERROR);
+                erro.setTitle("Erro");
+                erro.setHeaderText("Erro ao Cancelar");
+                erro.setContentText("Não foi possível cancelar o pedido.");
+                erro.showAndWait();
+            }
+        }
     }
 }
