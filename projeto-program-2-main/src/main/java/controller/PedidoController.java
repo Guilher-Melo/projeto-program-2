@@ -123,9 +123,12 @@ public class PedidoController {
     // Registra pagamento e LIBERA A MESA
     public boolean registrarPagamento(int idPedido, MetodoPagamento metodo) {
         Pedido pedido = repositorioPedido.buscarPorId(idPedido);
-        
-        if (pedido.getStatus() != StatusPedido.ENTREGUE && pedido.getStatus() != StatusPedido.PRONTO) {
-            // Retorne false ou lance exceção avisando que o pedido ainda não foi entregue
+
+        // Permite pagar se estiver Confirmado, Pronto ou Entregue.
+        // Só bloqueia se estiver Pendente (ainda anotando), Cancelado ou já Pago.
+        if (pedido.getStatus() == StatusPedido.PENDENTE || 
+            pedido.getStatus() == StatusPedido.CANCELADO || 
+            pedido.getStatus() == StatusPedido.PAGO) {
             return false; 
         }       
         
