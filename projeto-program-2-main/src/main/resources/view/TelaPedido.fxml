@@ -24,6 +24,9 @@
                 <Label text="Cliente:" textFill="white" style="-fx-font-weight: bold;"/>
                 <TextField fx:id="txtTelefoneCliente" promptText="Telefone (ex: 99999-9999)" prefWidth="150"/>
                 <Button text="🔍 Buscar" onAction="#buscarCliente" style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+                
+                <Button text="👤 Anônimo" onAction="#definirClienteAnonimo" style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+                
                 <Label fx:id="lblNomeCliente" text="Cliente não identificado" textFill="white" style="-fx-font-style: italic;"/>
             </HBox>
         </VBox>

@@ -195,47 +195,43 @@ public class TelaPedidoController implements IControlador {
     }
 
     // (Checklist Item 7)
+    
+
     @FXML
     public void fecharConta() {
-        // VERIFICAÇÃO MODIFICADA: Se o pedido existe mas está vazio
-        if (pedidoAtual != null && pedidoAtual.getItens().isEmpty()) {
-            
-            // Pergunta ao usuário se deseja liberar a mesa
+        // Se o pedido não existe
+        if (pedidoAtual == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Atenção");
+            alert.setHeaderText("Nenhum Pedido");
+            alert.setContentText("Não há pedido aberto para fechar.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Se o pedido existe mas está vazio (ANTES de confirmar)
+        if (pedidoAtual.getItens().isEmpty()) {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacao.setTitle("Liberar Mesa");
             confirmacao.setHeaderText("Mesa sem consumo");
             confirmacao.setContentText("A mesa está ocupada, mas não há itens pedidos.\nDeseja liberar a mesa e cancelar este atendimento?");
 
             if (confirmacao.showAndWait().get() == javafx.scene.control.ButtonType.OK) {
-                // 1. Cancela o pedido vazio para não ficar "Pendente" no sistema
                 fachada.atualizarStatusPedido(pedidoAtual.getId(), modelo.StatusPedido.CANCELADO);
-                
-                // 2. Força a mesa a voltar para LIVRE
                 fachada.alterarStatusMesa(idMesaAtual, modelo.StatusMesa.LIVRE);
                 
-                // 3. Feedback e retorno
                 Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
                 sucesso.setTitle("Sucesso");
                 sucesso.setHeaderText(null);
                 sucesso.setContentText("Mesa liberada com sucesso!");
                 sucesso.showAndWait();
                 
-                voltar(); // Volta para a tela de mesas
+                voltar();
             }
-            return; // Interrompe o resto do método fecharConta
+            return;
         }
 
-        // --- CÓDIGO ORIGINAL CONTINUA AQUI ---
-        // Se o pedido for nulo (caso raro se a tela abriu)
-        if (pedidoAtual == null) {
-             Alert alert = new Alert(Alert.AlertType.WARNING);
-             alert.setTitle("Atenção");
-             alert.setHeaderText("Nenhum Pedido");
-             alert.setContentText("Não há pedido aberto para fechar.");
-             alert.showAndWait();
-             return;
-        }
-
+        // CONTINUA O PROCESSO NORMAL DE PAGAMENTO
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/FechamentoConta.fxml"));
             Parent root = loader.load();
@@ -250,7 +246,6 @@ public class TelaPedidoController implements IControlador {
             stage.setScene(new Scene(root));
             stage.showAndWait();
 
-            // Se o pagamento foi confirmado, volta para gestão de mesas
             if (controller.isPagamentoConfirmado()) {
                 Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
                 sucesso.setTitle("Sucesso");
@@ -270,6 +265,8 @@ public class TelaPedidoController implements IControlador {
             e.printStackTrace();
         }
     }
+
+
 
     @FXML
     public void voltar() {
@@ -365,55 +362,85 @@ public class TelaPedidoController implements IControlador {
     }
 
     @FXML
-    public void cancelarPedido() {
-        if (pedidoAtual == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Atenção");
-            alert.setHeaderText("Nenhum Pedido");
-            alert.setContentText("Não há pedido para cancelar.");
-            alert.showAndWait();
-            return;
-        }
-
-        if (pedidoAtual.getStatus() == modelo.StatusPedido.ENTREGUE) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Atenção");
-            alert.setHeaderText("Pedido Finalizado");
-            alert.setContentText("Não é possível cancelar um pedido já entregue.");
-            alert.showAndWait();
-            return;
-        }
-
-        if (pedidoAtual.getStatus() == modelo.StatusPedido.CANCELADO) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Atenção");
-            alert.setHeaderText("Pedido já Cancelado");
-            alert.setContentText("Este pedido já foi cancelado anteriormente.");
-            alert.showAndWait();
-            return;
-        }
-
-        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacao.setTitle("Confirmar Cancelamento");
-        confirmacao.setHeaderText("Cancelar Pedido");
-        confirmacao.setContentText("Tem certeza que deseja cancelar este pedido?\nEsta ação não pode ser desfeita.");
-
-        if (confirmacao.showAndWait().get() == javafx.scene.control.ButtonType.OK) {
-            if (fachada.atualizarStatusPedido(pedidoAtual.getId(), modelo.StatusPedido.CANCELADO)) {
-                pedidoAtual.setStatus(modelo.StatusPedido.CANCELADO);
-                Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
-                sucesso.setTitle("Pedido Cancelado");
-                sucesso.setHeaderText("Sucesso");
-                sucesso.setContentText("O pedido foi cancelado com sucesso.");
-                sucesso.showAndWait();
-                atualizarTela();
-            } else {
-                Alert erro = new Alert(Alert.AlertType.ERROR);
-                erro.setTitle("Erro");
-                erro.setHeaderText("Erro ao Cancelar");
-                erro.setContentText("Não foi possível cancelar o pedido.");
-                erro.showAndWait();
+        public void cancelarPedido() {
+            if (pedidoAtual == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Atenção");
+                alert.setHeaderText("Nenhum Pedido");
+                alert.setContentText("Não há pedido para cancelar.");
+                alert.showAndWait();
+                return;
             }
+
+            if (pedidoAtual.getStatus() == modelo.StatusPedido.ENTREGUE) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Atenção");
+                alert.setHeaderText("Pedido Finalizado");
+                alert.setContentText("Não é possível cancelar um pedido já entregue.");
+                alert.showAndWait();
+                return;
+            }
+
+            if (pedidoAtual.getStatus() == modelo.StatusPedido.CANCELADO) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Atenção");
+                alert.setHeaderText("Pedido já Cancelado");
+                alert.setContentText("Este pedido já foi cancelado anteriormente.");
+                alert.showAndWait();
+                return;
+            }
+
+            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacao.setTitle("Confirmar Cancelamento");
+            confirmacao.setHeaderText("Cancelar Pedido");
+            confirmacao.setContentText("Tem certeza que deseja cancelar este pedido?\nEsta ação não pode ser desfeita.");
+
+            if (confirmacao.showAndWait().get() == javafx.scene.control.ButtonType.OK) {
+                if (fachada.atualizarStatusPedido(pedidoAtual.getId(), modelo.StatusPedido.CANCELADO)) {
+                    pedidoAtual.setStatus(modelo.StatusPedido.CANCELADO);
+                    
+                    // LIBERAÇÃO DA MESA APÓS CANCELAMENTO
+                    fachada.alterarStatusMesa(idMesaAtual, modelo.StatusMesa.LIVRE);
+                    
+                    Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                    sucesso.setTitle("Pedido Cancelado");
+                    sucesso.setHeaderText("Sucesso");
+                    sucesso.setContentText("O pedido foi cancelado e a mesa foi liberada.");
+                    sucesso.showAndWait();
+                    
+                    // Volta para gestão de mesas
+                    GerenciadorTelas.getInstance().trocarTela("/view/GestaoMesas.fxml", "Gestão de Mesas");
+                } else {
+                    Alert erro = new Alert(Alert.AlertType.ERROR);
+                    erro.setTitle("Erro");
+                    erro.setHeaderText("Erro ao Cancelar");
+                    erro.setContentText("Não foi possível cancelar o pedido.");
+                    erro.showAndWait();
+                }
+            }
+        }
+
+    @FXML
+    public void definirClienteAnonimo() {
+        // Garante que o pedido existe antes de vincular
+        if (!garantirPedidoExiste()) {
+            return;
+        }
+
+        // Busca o cliente "padrão" que criamos no MainApp
+        Cliente anonimo = fachada.buscarClientePorTelefone("000000000");
+        
+        if (anonimo != null) {
+            pedidoAtual.setCliente(anonimo);
+            
+            // Limpa o campo de texto para não confundir
+            txtTelefoneCliente.clear();
+            
+            // Atualiza a interface
+            atualizarTela();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Cliente Anônimo não encontrado no sistema.");
+            alert.showAndWait();
         }
     }
 }

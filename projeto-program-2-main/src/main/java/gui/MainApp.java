@@ -48,7 +48,7 @@ public class MainApp extends Application {
             
             // 3. Cadastrando Cliente Anônimo (NOVO)
             // Usamos um telefone padrão "00000-0000" para identificá-lo internamente
-            fachada.cadastrarCliente(new Cliente("Cliente Anônimo", "00000-0000", "sem_email"));
+            fachada.cadastrarCliente(new Cliente("Cliente Anônimo", "000000000", "sem_email"));
 
             // --- 4. Populando o Cardápio (3 itens por categoria) ---
             // ENTRADAS
