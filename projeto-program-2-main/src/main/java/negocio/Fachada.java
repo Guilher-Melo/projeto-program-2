@@ -144,6 +144,10 @@ public class Fachada {
         return mesaController.alterarStatusMesa(numeroMesa, novoStatus);
     }
 
+    public void atualizarQuantidadeMesas(int novaQtd) throws Exception {
+        mesaController.atualizarQuantidadeMesas(novaQtd);
+    }
+    
     // =======================================================
     // OPERAÇÕES DE CARDÁPIO
     // =======================================================

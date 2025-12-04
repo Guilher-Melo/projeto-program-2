@@ -1,9 +1,10 @@
 package controller;
 
+import java.util.List;
+
 import modelo.Mesa;
 import modelo.StatusMesa;
 import repositorio.IRepositorioMesa;
-import java.util.List;
 
 public class MesaController {
 
@@ -89,5 +90,33 @@ public class MesaController {
         repositorioMesa.atualizar(mesa);
         
         return true;
+    }
+    // NOVO MÉTODO PARA REDIMENSIONAR
+    public void atualizarQuantidadeMesas(int novaQuantidade) throws Exception {
+        List<Mesa> mesasAtuais = repositorioMesa.listarTodas();
+        int qtdAtual = mesasAtuais.size();
+
+        if (novaQuantidade == qtdAtual) return; // Nada a fazer
+
+        if (novaQuantidade > qtdAtual) {
+            // ADICIONAR MESAS
+            for (int i = qtdAtual + 1; i <= novaQuantidade; i++) {
+                int capacidade = (i % 2 == 0) ? 2 : 4; // Lógica par/impar
+                Mesa novaMesa = new Mesa(i, capacidade, StatusMesa.LIVRE);
+                repositorioMesa.cadastrar(novaMesa);
+            }
+        } else {
+            // REMOVER MESAS (Do fim para o começo)
+            // Só permite remover se a mesa estiver LIVRE
+            for (int i = qtdAtual; i > novaQuantidade; i--) {
+                Mesa mesaParaRemover = repositorioMesa.buscarPorNumero(i);
+                
+                if (mesaParaRemover.getStatus() != StatusMesa.LIVRE) {
+                    throw new Exception("Não é possível reduzir para " + novaQuantidade + 
+                        " mesas pois a Mesa " + i + " está ocupada ou reservada.");
+                }
+                repositorioMesa.remover(mesaParaRemover);
+            }
+        }
     }
 }

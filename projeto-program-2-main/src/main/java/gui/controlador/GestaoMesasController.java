@@ -6,6 +6,7 @@ import gui.GerenciadorTelas;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField; // <--- O IMPORT QUE PROVAVELMENTE FALTOU
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.TextAlignment;
 import modelo.Mesa;
@@ -16,6 +17,9 @@ public class GestaoMesasController implements IControlador {
 
     @FXML
     private TilePane painelMesas; 
+    
+    @FXML 
+    private TextField txtQtdMesas; // <--- O NOVO CAMPO
 
     private Fachada fachada;
 
@@ -36,15 +40,45 @@ public class GestaoMesasController implements IControlador {
         // --------------------
 
         List<Mesa> mesas = fachada.listarMesas();
+        
+        // Atualiza o campo de texto lá em cima com a quantidade atual
+        if (txtQtdMesas != null) {
+            txtQtdMesas.setText(String.valueOf(mesas.size()));
+        }
 
         if (mesas.isEmpty()) {
-            
             return;
         }
 
         for (Mesa mesa : mesas) {
             Button btnMesa = criarBotaoMesa(mesa);
             painelMesas.getChildren().add(btnMesa);
+        }
+    }
+    
+    // --- NOVO MÉTODO PARA O BOTÃO OK ---
+    @FXML
+    public void mudarQuantidade() {
+        try {
+            int novaQtd = Integer.parseInt(txtQtdMesas.getText());
+            if (novaQtd <= 0) {
+                mostrarAlerta("Erro", "A quantidade deve ser maior que zero.");
+                return;
+            }
+
+            // Chama a fachada para redimensionar
+            fachada.atualizarQuantidadeMesas(novaQtd);
+            
+            // Recarrega a tela para mostrar os novos botões
+            atualizarMesas();
+            
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Erro", "Digite um número válido.");
+        } catch (Exception e) {
+            // Captura o erro se tentar remover mesa ocupada
+            mostrarAlerta("Não permitido", e.getMessage());
+            // Reseta o campo para o valor real atual
+            atualizarMesas();
         }
     }
 
