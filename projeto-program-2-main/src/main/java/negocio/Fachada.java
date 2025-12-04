@@ -18,7 +18,18 @@ import modelo.Pedido;
 import modelo.Relatorio;
 import modelo.Reserva;
 import modelo.StatusMesa;
-import repositorio.*;
+import repositorio.IRepositorioCliente;
+import repositorio.IRepositorioFuncionario;
+import repositorio.IRepositorioItemCardapio;
+import repositorio.IRepositorioMesa;
+import repositorio.IRepositorioPedido;
+import repositorio.IRepositorioReserva;
+import repositorio.RepositorioClienteArray;
+import repositorio.RepositorioFuncionarioArray;
+import repositorio.RepositorioItemCardapioArray;
+import repositorio.RepositorioMesaArray;
+import repositorio.RepositorioPedidoArray;
+import repositorio.RepositorioReservaArray;
 
 public class Fachada {
 
@@ -187,6 +198,11 @@ public class Fachada {
     public boolean fazerReserva(Reserva reserva, Mesa mesa) {
         // Futuramente, podemos aplicar a mesma lógica de injeção no ReservaController
         return reservaController.fazerReserva(reserva, mesa, mesaController);
+    }
+    
+    public void atualizarStatusReservas() {
+        // Chama a verificação lógica passando o controlador de mesas para permitir alterações
+        reservaController.verificarStatusDasReservas(mesaController);
     }
 
     public boolean cancelarReserva(Reserva reserva) {

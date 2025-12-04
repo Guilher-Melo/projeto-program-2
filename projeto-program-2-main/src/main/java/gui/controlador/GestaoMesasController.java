@@ -31,10 +31,14 @@ public class GestaoMesasController implements IControlador {
 
         painelMesas.getChildren().clear();
 
+        // Antes de listar, verifica os horários e atualiza status (Reservada / Livre)
+        fachada.atualizarStatusReservas(); 
+        // --------------------
+
         List<Mesa> mesas = fachada.listarMesas();
 
         if (mesas.isEmpty()) {
-            mostrarAlerta("Informação", "Nenhuma mesa cadastrada no sistema.");
+            
             return;
         }
 

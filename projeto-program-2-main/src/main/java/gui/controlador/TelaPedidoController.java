@@ -197,13 +197,43 @@ public class TelaPedidoController implements IControlador {
     // (Checklist Item 7)
     @FXML
     public void fecharConta() {
-        if (pedidoAtual == null || pedidoAtual.getItens().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Atenção");
-            alert.setHeaderText("Pedido Vazio");
-            alert.setContentText("Não é possível fechar uma conta sem itens no pedido.");
-            alert.showAndWait();
-            return;
+        // VERIFICAÇÃO MODIFICADA: Se o pedido existe mas está vazio
+        if (pedidoAtual != null && pedidoAtual.getItens().isEmpty()) {
+            
+            // Pergunta ao usuário se deseja liberar a mesa
+            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacao.setTitle("Liberar Mesa");
+            confirmacao.setHeaderText("Mesa sem consumo");
+            confirmacao.setContentText("A mesa está ocupada, mas não há itens pedidos.\nDeseja liberar a mesa e cancelar este atendimento?");
+
+            if (confirmacao.showAndWait().get() == javafx.scene.control.ButtonType.OK) {
+                // 1. Cancela o pedido vazio para não ficar "Pendente" no sistema
+                fachada.atualizarStatusPedido(pedidoAtual.getId(), modelo.StatusPedido.CANCELADO);
+                
+                // 2. Força a mesa a voltar para LIVRE
+                fachada.alterarStatusMesa(idMesaAtual, modelo.StatusMesa.LIVRE);
+                
+                // 3. Feedback e retorno
+                Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                sucesso.setTitle("Sucesso");
+                sucesso.setHeaderText(null);
+                sucesso.setContentText("Mesa liberada com sucesso!");
+                sucesso.showAndWait();
+                
+                voltar(); // Volta para a tela de mesas
+            }
+            return; // Interrompe o resto do método fecharConta
+        }
+
+        // --- CÓDIGO ORIGINAL CONTINUA AQUI ---
+        // Se o pedido for nulo (caso raro se a tela abriu)
+        if (pedidoAtual == null) {
+             Alert alert = new Alert(Alert.AlertType.WARNING);
+             alert.setTitle("Atenção");
+             alert.setHeaderText("Nenhum Pedido");
+             alert.setContentText("Não há pedido aberto para fechar.");
+             alert.showAndWait();
+             return;
         }
 
         try {
