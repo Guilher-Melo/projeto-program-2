@@ -221,7 +221,19 @@ public class Fachada {
         return relatorio.gerarVendasPorPeriodo(pedidoController.listarTodosPedidos(), inicio, fim);
     }
 
+    // REQ18
     public String gerarRelatorioItensMaisVendidos() {
         return relatorio.gerarItensMaisVendidos(pedidoController.listarTodosPedidos());
+    }
+
+    // REQ19
+    public String gerarRelatorioOcupacao() {
+        // Passa a lista de mesas do controller de mesas para o relatório
+        return relatorio.gerarRelatorioOcupacao(mesaController.listarTodasMesas());
+    }
+
+    // REQ20
+    public boolean exportarRelatorio(String conteudo, String nomeArquivo) {
+        return relatorio.exportar(conteudo, nomeArquivo);
     }
 }
