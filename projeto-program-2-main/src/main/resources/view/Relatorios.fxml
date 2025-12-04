@@ -36,19 +36,18 @@
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
             
-            <VBox spacing="5.0">
+            <HBox spacing="10" alignment="CENTER">
                <children>
-                  <Label text="Data de Início:" style="-fx-font-weight: bold;"/>
-                  <DatePicker fx:id="dataInicioPicker" prefWidth="300.0" />
+                  <VBox spacing="5.0">
+                     <Label text="Data de Início:" style="-fx-font-weight: bold;"/>
+                     <DatePicker fx:id="dataInicioPicker" prefWidth="200.0" />
+                  </VBox>
+                  <VBox spacing="5.0">
+                     <Label text="Data de Fim:" style="-fx-font-weight: bold;"/>
+                     <DatePicker fx:id="dataFimPicker" prefWidth="200.0" />
+                  </VBox>
                </children>
-            </VBox>
-            
-            <VBox spacing="5.0">
-               <children>
-                  <Label text="Data de Fim:" style="-fx-font-weight: bold;"/>
-                  <DatePicker fx:id="dataFimPicker" prefWidth="300.0" />
-               </children>
-            </VBox>
+            </HBox>
             
             <HBox spacing="15" alignment="CENTER">
                 <Button fx:id="btnRelatorioVendas" onAction="#gerarRelatorioVendasAction" 
@@ -60,9 +59,19 @@
                         style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold;"/>
             </HBox>
 
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="Ocupação de Mesas" onAction="#gerarRelatorioOcupacaoAction" 
+                        prefWidth="200.0" 
+                        style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-weight: bold;"/>
+         
+                <Button text="💾 Exportar (CSV/TXT)" onAction="#exportarRelatorioAction" 
+                        prefWidth="200.0" 
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            </HBox>
+
             <TextArea fx:id="txtAreaRelatorios" editable="false" VBox.vgrow="ALWAYS" 
                       promptText="O resultado do relatório aparecerá aqui..." wrapText="true"
-                      style="-fx-font-family: 'Monospaced';"/>
+                      style="-fx-font-family: 'Monospaced'; -fx-font-size: 14px;"/>
         </VBox>
     </center>
 </BorderPane>
